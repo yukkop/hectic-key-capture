@@ -1,9 +1,15 @@
 use colored::*;
-use crossterm::event::KeyModifiers;
+use crossterm::event::{poll, KeyModifiers};
+use crossterm::{
+    event::{read, Event, KeyCode},
+    execute,
+    terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
+};
 use device_query::{DeviceQuery, DeviceState, Keycode};
 use std::collections::HashMap;
+use std::env;
+use std::io::stdout;
 use std::time::Duration;
-use std::{env, thread};
 
 const PRODUCTIVE_SENSITIVITY_KEY: &str = "productive";
 const PRODUCTIVE_SENSITIVITY_VALUE: u64 = 100;
@@ -65,6 +71,8 @@ fn main() {
 {optiongs_title}
     {sensitivity_short}, {sensitivity_long} {sensitivity_value}
                     Interprets how often keyboard input will be taken (milliseconds)
+                    for reduce CPU usage
+
                     100 is a standard value, for a typical keyboard it will be enough
                     1 - very sensitive
                     
@@ -109,27 +117,28 @@ fn main() {
     let mut key_counts: HashMap<Keycode, u32> = HashMap::new();
     let mut last_keys = Vec::new();
 
-    use crossterm::{
-        event::{read, Event, KeyCode},
-        execute,
-        terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
-    };
-    use std::io::{stdout, Write};
+        let mut stdout = stdout();
 
-    enable_raw_mode().expect("enable_raw_mode problem");
-
-    let mut stdout = stdout();
-    execute!(stdout, EnterAlternateScreen).expect("EnterAlternateScreen problem");
+    if verbose {
+        enable_raw_mode().expect("enable_raw_mode problem");
+        execute!(stdout, EnterAlternateScreen).expect("EnterAlternateScreen problem");
+    }
 
     loop {
-        match read().expect("read error") {
-            Event::Key(event) => {
-                if event.code == KeyCode::Char('c') && event.modifiers.contains(KeyModifiers::CONTROL) {
-                    break;
+        if verbose && poll(Duration::from_millis(sensitivity)).expect("poll error") {
+            match read().expect("read error") {
+                Event::Key(event) => {
+                    if event.code == KeyCode::Char('c')
+                        && event.modifiers.contains(KeyModifiers::CONTROL)
+                    {
+                        break;
+                    }
+                    // Handle other key events here
                 }
+                _ => {}
             }
-            _ => {}
         }
+
         let keys = device_state.get_keys();
 
         // Check for new key presses
@@ -146,9 +155,10 @@ fn main() {
         }
 
         last_keys = keys;
-
-        thread::sleep(Duration::from_millis(sensitivity)); // Reduce CPU usage
     }
-    execute!(stdout, LeaveAlternateScreen).expect("LeaveAlternateScreen problem");
-    disable_raw_mode().expect("disable_raw_mode problem");
+
+    if verbose {
+        execute!(stdout, LeaveAlternateScreen).expect("LeaveAlternateScreen problem");
+        disable_raw_mode().expect("disable_raw_mode problem");
+    }
 }

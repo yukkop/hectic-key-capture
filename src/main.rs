@@ -1,3 +1,4 @@
+use colored::*;
 use device_query::{DeviceQuery, DeviceState, Keycode};
 use std::collections::HashMap;
 use std::time::Duration;
@@ -8,14 +9,30 @@ const PRODUCTIVE_SENSITIVITY_VALUE: u64 = 100;
 const INTENT_SENSITIVITY_KEY: &str = "intent";
 const INTENT_SENSITIVITY_VALUE: u64 = 1;
 
+const VERSION: &str = env!("CARGO_PKG_VERSION");
+
 const SENSITIVITY_SHORT: &str = "-s";
 const SENSITIVITY_LONG: &str = "--sensitivity";
 
 const HELP_SHORT: &str = "-h";
 const HELP_LONG: &str = "--help";
 
+const VERSION_SHORT: &str = "-V";
+const VERSION_LONG: &str = "--version";
+
+const VERBOSE_SHORT: &str = "-v";
+const VERBOSE_LONG: &str = "--verbose";
+
+macro_rules! verbose {
+    ($verbose:expr, $($arg:tt)*) => {
+        if $verbose {
+            println!($($arg)*);
+        }
+    };
+}
 fn main() {
-    let mut sensitivity: u64 = PRODUCTIVE_SENSITIVITY_VALUE;
+    let mut sensitivity = PRODUCTIVE_SENSITIVITY_VALUE;
+    let mut verbose = false;
     let mut args = env::args();
     let program_name = args.next().expect("this panic not posible");
 
@@ -34,11 +51,18 @@ fn main() {
                     ),
                 }
             }
+            VERSION_SHORT | VERSION_LONG => {
+                println!("{}", VERSION);
+            }
+            VERBOSE_SHORT | VERBOSE_LONG => verbose = true,
             HELP_SHORT | "-?" | "?" | "h" | HELP_LONG | "-help" | "help" => {
                 println!(
-                    r#"{program_name} - program for capture statistic 
-of you keyboard usage
-{SENSITIVITY_SHORT}, {SENSITIVITY_LONG} [<pos_val> | {PRODUCTIVE_SENSITIVITY_KEY} | {INTENT_SENSITIVITY_KEY}]
+                    r#"Program for capture statistic of you keyboard usage
+
+{usage_title} {usage_content}
+
+{optiongs_title}
+    {sensitivity_short}, {sensitivity_long} {sensitivity_value}
                     Interprets how often keyboard input will be taken (milliseconds)
                     100 is a standard value, for a typical keyboard it will be enough
                     1 - very sensitive
@@ -49,9 +73,32 @@ of you keyboard usage
                     It may be worth checking whether all the keys are picked up by the 
                     program and if some cannot be picked up, reduce this value
 
-{HELP_SHORT}, {HELP_LONG}         
-                    This message"#
+    {version_short}, {version_long}         
+                    Show the version
+
+    {verbose_short}, {verbose_long}         
+                    Describe the steps of the program
+
+    {help_short}, {help_long}         
+                    This message"#,
+                    usage_title = "Usage:".green(),
+                    optiongs_title = "Options:".green(),
+                    usage_content = format!("{program_name} [OPTIONS]").cyan(),
+                    sensitivity_short = SENSITIVITY_SHORT.cyan(),
+                    sensitivity_long = SENSITIVITY_LONG.cyan(),
+                    sensitivity_value = format!(
+                        "[<pos_val> | {PRODUCTIVE_SENSITIVITY_KEY} | {INTENT_SENSITIVITY_KEY}]"
+                    )
+                    .cyan(),
+                    help_long = HELP_LONG.cyan(),
+                    help_short = HELP_SHORT.cyan(),
+                    version_short = VERSION_SHORT.cyan(),
+                    version_long = VERSION_LONG.cyan(),
+                    verbose_short = VERBOSE_SHORT.cyan(),
+                    verbose_long = VERBOSE_LONG.cyan(),
                 );
+
+                std::process::exit(0);
             }
             _ => println!("Unhandled option: {}", arg),
         }
@@ -68,7 +115,12 @@ of you keyboard usage
         for key in &keys {
             if !last_keys.contains(key) {
                 *key_counts.entry(*key).or_insert(0) += 1;
-                println!("{:?} has been pressed {} times", key, key_counts[key]);
+                verbose!(
+                    verbose,
+                    "{:?} has been pressed {} times",
+                    key,
+                    key_counts[key]
+                );
             }
         }
 

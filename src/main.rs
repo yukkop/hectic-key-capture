@@ -1,4 +1,5 @@
 use colored::*;
+use crossterm::event::KeyModifiers;
 use device_query::{DeviceQuery, DeviceState, Keycode};
 use std::collections::HashMap;
 use std::time::Duration;
@@ -26,7 +27,7 @@ const VERBOSE_LONG: &str = "--verbose";
 macro_rules! verbose {
     ($verbose:expr, $($arg:tt)*) => {
         if $verbose {
-            println!($($arg)*);
+            println!("\r{}", format!($($arg)*));
         }
     };
 }
@@ -108,7 +109,27 @@ fn main() {
     let mut key_counts: HashMap<Keycode, u32> = HashMap::new();
     let mut last_keys = Vec::new();
 
+    use crossterm::{
+        event::{read, Event, KeyCode},
+        execute,
+        terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
+    };
+    use std::io::{stdout, Write};
+
+    enable_raw_mode().expect("enable_raw_mode problem");
+
+    let mut stdout = stdout();
+    execute!(stdout, EnterAlternateScreen).expect("EnterAlternateScreen problem");
+
     loop {
+        match read().expect("read error") {
+            Event::Key(event) => {
+                if event.code == KeyCode::Char('c') && event.modifiers.contains(KeyModifiers::CONTROL) {
+                    break;
+                }
+            }
+            _ => {}
+        }
         let keys = device_state.get_keys();
 
         // Check for new key presses
@@ -128,4 +149,6 @@ fn main() {
 
         thread::sleep(Duration::from_millis(sensitivity)); // Reduce CPU usage
     }
+    execute!(stdout, LeaveAlternateScreen).expect("LeaveAlternateScreen problem");
+    disable_raw_mode().expect("disable_raw_mode problem");
 }

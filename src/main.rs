@@ -168,6 +168,7 @@ fn main() {
             }
             VERSION_SHORT | VERSION_LONG => {
                 println!("{}", VERSION);
+                std::process::exit(0);
             }
             MODIFY_OUTPUT_SHORT | MODIFY_OUTPUT_LONG => {
                 force_modify_output = true;

@@ -80,6 +80,20 @@ macro_rules! verbose {
     };
 }
 
+trait Frmater {
+    fn to_string(&self) -> &str;
+}
+
+impl Frmater for PathBuf {
+    fn to_string(&self) -> &str {
+        if let Some(str) = self.to_str() {
+            str
+        } else {
+            "%path error%"
+        }
+    }
+}
+
 #[derive(Debug)]
 pub enum TraceStep {
     First(Vec<Keycode>),
@@ -93,15 +107,20 @@ pub struct KeyCounts {
     pub map: HashMap<CountItem, u32>,
 }
 
-#[derive(Debug, Clone, Copy, Default, Deserialize, Serialize)]
+#[derive(Debug, Clone, Default, Deserialize, Serialize)]
 pub struct Config {
     pub pairs: bool,
     pub no_chords: bool,
+    pub version: String,
 }
 
 impl Config {
-    pub fn new(pairs: bool, no_chords: bool) -> Self {
-        Self { pairs, no_chords }
+    pub fn new(pairs: bool, no_chords: bool, version: String) -> Self {
+        Self {
+            pairs,
+            no_chords,
+            version,
+        }
     }
 }
 
@@ -472,7 +491,7 @@ fn main() {
     }
 
     // process the output file
-    fn asl_modify(force: bool, path: &PathBuf) {
+    fn ask_modify(force: bool, path: &PathBuf) {
         if !force {
             println!(
                 "{} ({:?}) {}",
@@ -480,7 +499,7 @@ fn main() {
                 path,
                 "already exist".yellow(),
             );
-            print!("would you like modify this file? [y/N] ");
+            print!("are you sure you want to modify this file? [y/N] ");
             io::stdout().flush().unwrap();
 
             let mut buffer = [0; 1];
@@ -541,20 +560,26 @@ fn main() {
             })
             .unwrap();
 
-        asl_modify(force_modify_output, path);
+        ask_modify(force_modify_output, path);
     }
 
-    if let Some(config) = key_counts.config {
-        check_config(config, pairs, no_chords, statistic_path.as_ref().unwrap());
+    if let Some(ref mut config) = key_counts.config {
+        check_config(
+            config,
+            force_modify_output,
+            pairs,
+            no_chords,
+            statistic_path.as_ref().unwrap(),
+        );
     } else {
-        key_counts.config = Some(Config::new(pairs, no_chords));
+        key_counts.config = Some(Config::new(pairs, no_chords, VERSION.into()));
     }
 
     // save first time to check open/write errors
     save_data(&key_counts, statistic_path.as_ref().unwrap());
     if let Some(ref trace_path) = trace_path {
         if trace_path.exists() {
-            asl_modify(force_modify_trace, trace_path);
+            ask_modify(force_modify_trace, trace_path);
         }
         upend_trace(TraceStep::Empty, &trace_path, trace_plain_style);
     }
@@ -762,7 +787,13 @@ fn upend_trace(trace_step: TraceStep, path: &PathBuf, trace_plain_style: bool) {
     }
 }
 
-fn check_config(config: Config, pairs: bool, no_chords: bool, path: &PathBuf) {
+fn check_config(
+    config: &mut Config,
+    force_modify_output: bool,
+    pairs: bool,
+    no_chords: bool,
+    path: &PathBuf,
+) {
     let error = format!(
         "Config in output file that you provide {:?} do not match to your options\nit is means different settings were used to create this file\n",
         path
@@ -794,18 +825,33 @@ fn check_config(config: Config, pairs: bool, no_chords: bool, path: &PathBuf) {
         );
         std::process::exit(1);
     }
-}
 
-trait Frmater {
-    fn to_string(&self) -> &str;
-}
+    if config.version != VERSION {
+        println!(
+            "{warning} {config_verison}{curent_is} {VERSION}",
+            warning = "warning!: the output file last updated on".yellow(),
+            config_verison = config.version,
+            curent_is = ", curent version is".yellow(),
+        );
 
-impl Frmater for PathBuf {
-    fn to_string(&self) -> &str {
-        if let Some(str) = self.to_str() {
-            str
-        } else {
-            "%path error%"
+        if !force_modify_output {
+            print!("are you sure you want to modify this file? [y/N] ");
+            io::stdout().flush().unwrap();
+            let mut buffer = [0; 1];
+            io::stdin()
+                .read_exact(&mut buffer)
+                .or_else(|_| -> Result<_, ()> {
+                    println!("{}", "cannot read terminal input".red());
+                    std::process::exit(1);
+                })
+                .unwrap();
+            let character = buffer[0] as char;
+
+            match character {
+                'y' | 'Y' => {}
+                _ => std::process::exit(0),
+            }
         }
+        config.version = VERSION.into();
     }
 }

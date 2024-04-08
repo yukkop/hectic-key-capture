@@ -1,4 +1,5 @@
 use ahash::AHasher;
+use chrono::Local;
 use colored::*;
 use core::fmt;
 use crossterm::event::{poll, KeyModifiers};
@@ -75,7 +76,7 @@ macro_rules! verbose {
 pub enum TraceStep {
     First(Keycode),
     Regular(Keycode, Duration),
-    Check,
+    Init(String),
 }
 
 #[derive(Debug)]
@@ -283,6 +284,7 @@ fn main() {
         key_counts = serde_yaml::from_str(&contents)
             .expect("data in output file {:?} not valid and cannot be deserialize");
 
+
         if !force_modify_output {
             println!(
                 "{}: file that you provide like output ({:?}) already exist",
@@ -308,7 +310,7 @@ fn main() {
     // save first time to check open/write errors
     save_data(&key_counts, statistic_path.as_ref().unwrap());
     if let Some(ref trace_path) = trace_path {
-        upend_trace(TraceStep::Check, &trace_path);
+        upend_trace(TraceStep::Init(Local::now().to_rfc3339()), &trace_path);
     }
 
     let device_state = DeviceState::new();

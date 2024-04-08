@@ -44,3 +44,44 @@
 Regular(Up, 200.842497ms)
 Regular(LControl, 201.725056ms)
 Regular(C, 496.64µs)
+Check
+First(Down)
+Regular(Up, 279.82925ms)
+Regular(Down, 201.029608ms)
+Regular(Up, 201.259377ms)
+Regular(Down, 201.277612ms)
+Regular(Down, 220.616328ms)
+Regular(Up, 201.131679ms)
+Regular(Right, 201.629309ms)
+Regular(Up, 201.357191ms)
+Regular(Down, 201.441098ms)
+Regular(Up, 201.36237ms)
+Regular(LControl, 401.802745ms)
+Init("2024-04-08T04:21:13.265189747+02:00")
+First(Down)
+Regular(F, 201.407237ms)
+Regular(Up, 265.367µs)
+Regular(Down, 67.93226ms)
+Regular(Down, 205.567655ms)
+Regular(Up, 94.170835ms)
+Regular(Down, 86.053521ms)
+Regular(I, 300.139702ms)
+Regular(LControl, 201.415112ms)
+Regular(Right, 455.262µs)
+Regular(M, 217.957667ms)
+Regular(Down, 293.039µs)
+Regular(F, 15.2842ms)
+Regular(O, 83.901132ms)
+Regular(A, 19.692472ms)
+Regular(Up, 892.663456ms)
+Regular(Down, 201.069896ms)
+Regular(Up, 83.994767ms)
+Regular(Right, 15.28426ms)
+Regular(F, 201.18391ms)
+Regular(Down, 540.061µs)
+Regular(M, 201.557278ms)
+Regular(S, 270.77824ms)
+Regular(I, 15.637311ms)
+Regular(Up, 30.644312ms)
+Regular(LControl, 1.205483343s)
+Regular(C, 191.108µs)

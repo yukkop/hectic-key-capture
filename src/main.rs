@@ -89,12 +89,30 @@ pub struct KeyCounts(pub HashMap<CountItem, u32>);
 
 #[derive(Debug, Eq, PartialEq, Hash, Clone)]
 pub enum CountItem {
-    Single(Vec<Keycode>),
-    Pair(Vec<Keycode>, Vec<Keycode>),
+    Single(Input),
+    Pair(Input, Input),
+}
+
+#[derive(Debug, Eq, PartialEq, Hash, Clone)]
+pub enum Input {
+    Single(Keycode),
+    Chord(Vec<Keycode>),
 }
 
 fn keycode_to_string(keycode: &Keycode) -> String {
-    format!("{:?}", keycode) // Debug representation
+    format!("{:?}", keycode)
+}
+
+fn input_to_string(input: Input) -> String {
+    match input {
+        Input::Chord(keys) => {
+            let keys_str: Vec<String> = keys.iter().map(keycode_to_string).collect();
+            format!("Chord({:?})", keys_str.join("+")).replace("\"", "")
+        }
+        Input::Single(key) => {
+            format!("Single({:?})", keycode_to_string(&key))
+        }
+    }
 }
 
 // Custom Serialize implementation for KeyCounts
@@ -107,14 +125,14 @@ impl Serialize for KeyCounts {
         for (key, value) in &self.0 {
             // Serialize each CountItem as a string
             let key_str = match key {
-                CountItem::Single(keys) => {
-                    let keys_str: Vec<String> = keys.iter().map(keycode_to_string).collect();
-                    format!("Single({:?})", keys_str)
+                CountItem::Single(input) => {
+                    let input_str: String = input_to_string(input.clone());
+                    format!("Single({:?})", input_str)
                 }
-                CountItem::Pair(keys1, keys2) => {
-                    let keys1_str: Vec<String> = keys1.iter().map(keycode_to_string).collect();
-                    let keys2_str: Vec<String> = keys2.iter().map(keycode_to_string).collect();
-                    format!("Pair({:?}, {:?})", keys1_str, keys2_str)
+                CountItem::Pair(input1, input2) => {
+                    let input1_str: String = input_to_string(input1.clone());
+                    let input2_str: String = input_to_string(input2.clone());
+                    format!("Pair({}, {})", input1_str, input2_str)
                 }
             };
             map.serialize_entry(&key_str, value)?;
@@ -123,24 +141,93 @@ impl Serialize for KeyCounts {
     }
 }
 
-fn parse_keycode_from_string(s: &str) -> Result<Keycode, std::string::String> {
+/// unwrap firs braces ignoring all text outside
+fn unwrap_braces(s: &str) -> Result<&str, String> {
+    log::trace!("unwrap braces {}", s);
+
+    let (start, closure) = if let Some(pos) = s.find('(') {
+        (pos + 1, ')')
+    } else if let Some(pos) = s.find('[') {
+        (pos + 1, ']')
+    } else {
+        return Err("no ( or [ in str".to_string());
+    };
+
+    let end = match closure {
+        ')' => s.rfind(')').ok_or("no closing ) found")?,
+        ']' => s.rfind(']').ok_or("no closing ] found")?,
+        _ => return Err("unexpected closure character".to_string()),
+    };
+
+    let result = &s[start..end];
+    log::trace!("unwrap braces {}", result);
+    Ok(result)
+}
+
+fn parse_keycode_from_string(s: &str) -> Result<Keycode, String> {
+    log::trace!("try to parse keycode from {}", s);
     Keycode::from_str(s)
 }
 
-fn parse_count_item(s: &str) -> Result<CountItem, String> {
+fn parse_input_from_string(s: &str) -> Result<Input, String> {
     if s.starts_with("Single") {
-        let keycodes = Vec::new();
-        Ok(CountItem::Single(keycodes))
+        Ok(Input::Single(parse_keycode_from_string(unwrap_braces(s)?)?))
+    } else if s.starts_with("Chord") {
+        let keycodes_str = unwrap_braces(s)?;
+        let keycodes = keycodes_str
+            .split('+')
+            .filter_map(|s| {
+                let trimmed = s.trim();
+                if trimmed.is_empty() {
+                    None
+                } else {
+                    Some(parse_keycode_from_string(trimmed))
+                }
+            })
+            .collect::<Result<Vec<Keycode>, String>>()?;
+        Ok(Input::Chord(keycodes))
+    } else {
+        Err("Unrecognized Input format".to_string())
+    }
+}
+
+fn parse_count_item(s: &str) -> Result<CountItem, String> {
+    fn split_moded(input: &str, delimiter: &str) -> Vec<String> {
+        let mut result = Vec::new();
+        let mut start = 0;
+        let mut end = 0;
+
+        while let Some(index) = input[end..].find(delimiter) {
+            end += index;
+            // Add the length of the delimiter to include it in the substring
+            let next_end = end + delimiter.len();
+            result.push(input[start..next_end].to_string());
+            start = next_end;
+        }
+
+        if start < input.len() {
+            result.push(input[start..].to_string());
+        }
+
+        result
+    }
+
+    if s.starts_with("Single") {
+        let input = parse_input_from_string(unwrap_braces(s)?)?;
+        Ok(CountItem::Single(input))
     } else if s.starts_with("Pair") {
-        let keycodes1 = Vec::new();
-        let keycodes2 = Vec::new();
-        Ok(CountItem::Pair(keycodes1, keycodes2))
+        let inputs_str = unwrap_braces(s)?;
+        let inputs = inputs_str
+            .split(", ")
+            .map(parse_input_from_string)
+            .collect::<Result<Vec<Input>, String>>()?;
+
+        Ok(CountItem::Pair(inputs[0].clone(), inputs[1].clone()))
     } else {
         Err("Unrecognized CountItem format".to_string())
     }
 }
 
-// Custom Deserialize implementation for KeyCounts
 impl<'de> Deserialize<'de> for KeyCounts {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
@@ -187,6 +274,8 @@ impl DerefMut for KeyCounts {
 }
 
 fn main() {
+    env_logger::init();
+
     let mut key_counts = KeyCounts(HashMap::new());
 
     let mut sensitivity = PRODUCTIVE_SENSITIVITY_VALUE;
@@ -401,7 +490,8 @@ fn main() {
         }
         if some {
             if pairs {
-                let count_item = CountItem::Pair(last_pair.clone(), keys.clone());
+                let count_item =
+                    CountItem::Pair(Input::Chord(last_pair.clone()), Input::Chord(keys.clone()));
                 *key_counts.entry(count_item.clone()).or_insert(0) += 1;
                 verbose!(
                     verbose,
@@ -414,7 +504,7 @@ fn main() {
                 save_data(&key_counts, statistic_path.as_ref().unwrap());
                 last_pair = keys.clone();
             } else {
-                let count_item = CountItem::Single(keys.clone());
+                let count_item = CountItem::Single(Input::Chord(keys.clone()));
                 *key_counts.entry(count_item.clone()).or_insert(0) += 1;
                 verbose!(
                     verbose,

@@ -9,8 +9,10 @@ use crossterm::{
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
 use device_query::{DeviceQuery, DeviceState, Keycode};
+use serde::de::{self, MapAccess, Visitor};
 use serde::ser::SerializeMap;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
+use serde_derive::{Deserialize, Serialize};
 use std::fs::{File, OpenOptions};
 use std::hash::BuildHasherDefault;
 use std::io::{self, stdout, Read, Write};
@@ -58,6 +60,9 @@ const MODIFY_OUTPUT_LONG: &str = "--modify-output";
 const TRACE_SHORT: &str = "-t";
 const TRACE_LONG: &str = "--trace";
 
+const PAIRS_SHORT: &str = "-p";
+const PAIRS_LONG: &str = "--pairs";
+
 //const FORMAT_SHORT: &str = "-f";
 //const FORMAT_LONG: &str = "--format";
 
@@ -80,7 +85,17 @@ pub enum TraceStep {
 }
 
 #[derive(Debug)]
-pub struct KeyCounts(pub HashMap<Keycode, u32>);
+pub struct KeyCounts(pub HashMap<CountItem, u32>);
+
+#[derive(Debug, Eq, PartialEq, Hash, Clone)]
+pub enum CountItem {
+    Single(Vec<Keycode>),
+    Pair(Vec<Keycode>, Vec<Keycode>),
+}
+
+fn keycode_to_string(keycode: &Keycode) -> String {
+    format!("{:?}", keycode) // Debug representation
+}
 
 // Custom Serialize implementation for KeyCounts
 impl Serialize for KeyCounts {
@@ -90,10 +105,38 @@ impl Serialize for KeyCounts {
     {
         let mut map = serializer.serialize_map(Some(self.0.len()))?;
         for (key, value) in &self.0 {
-            // Convert each key to a string using its Debug representation
-            map.serialize_entry(&format!("{:?}", key), value)?;
+            // Serialize each CountItem as a string
+            let key_str = match key {
+                CountItem::Single(keys) => {
+                    let keys_str: Vec<String> = keys.iter().map(keycode_to_string).collect();
+                    format!("Single({:?})", keys_str)
+                }
+                CountItem::Pair(keys1, keys2) => {
+                    let keys1_str: Vec<String> = keys1.iter().map(keycode_to_string).collect();
+                    let keys2_str: Vec<String> = keys2.iter().map(keycode_to_string).collect();
+                    format!("Pair({:?}, {:?})", keys1_str, keys2_str)
+                }
+            };
+            map.serialize_entry(&key_str, value)?;
         }
         map.end()
+    }
+}
+
+fn parse_keycode_from_string(s: &str) -> Result<Keycode, std::string::String> {
+    Keycode::from_str(s)
+}
+
+fn parse_count_item(s: &str) -> Result<CountItem, String> {
+    if s.starts_with("Single") {
+        let keycodes = Vec::new();
+        Ok(CountItem::Single(keycodes))
+    } else if s.starts_with("Pair") {
+        let keycodes1 = Vec::new();
+        let keycodes2 = Vec::new();
+        Ok(CountItem::Pair(keycodes1, keycodes2))
+    } else {
+        Err("Unrecognized CountItem format".to_string())
     }
 }
 
@@ -103,27 +146,23 @@ impl<'de> Deserialize<'de> for KeyCounts {
     where
         D: Deserializer<'de>,
     {
-        use serde::de::{self, MapAccess, Visitor};
-
         struct KeyCountsVisitor;
 
         impl<'de> Visitor<'de> for KeyCountsVisitor {
             type Value = KeyCounts;
 
             fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
-                formatter.write_str("a map of Keycode to u32")
+                formatter.write_str("a map of CountItem to u32")
             }
 
-            fn visit_map<V>(self, mut map: V) -> Result<KeyCounts, V::Error>
+            fn visit_map<M>(self, mut map: M) -> Result<KeyCounts, M::Error>
             where
-                V: MapAccess<'de>,
+                M: MapAccess<'de>,
             {
                 let mut counts = HashMap::new();
-                while let Some((key, value)) = map.next_entry::<String, u32>()? {
-                    // Attempt to parse Keycode from the string
-                    // This requires your Keycode type to implement FromStr or similar logic to match back to a Keycode
-                    let keycode = Keycode::from_str(&key).map_err(de::Error::custom)?;
-                    counts.insert(keycode, value);
+                while let Some((key_str, value)) = map.next_entry::<String, u32>()? {
+                    let count_item = parse_count_item(&key_str).map_err(de::Error::custom)?;
+                    counts.insert(count_item, value);
                 }
                 Ok(KeyCounts(counts))
             }
@@ -134,7 +173,7 @@ impl<'de> Deserialize<'de> for KeyCounts {
 }
 
 impl Deref for KeyCounts {
-    type Target = HashMap<Keycode, u32>;
+    type Target = HashMap<CountItem, u32>;
 
     fn deref(&self) -> &Self::Target {
         &self.0
@@ -155,6 +194,7 @@ fn main() {
     let mut verbose = false;
     let mut statistic_path: Option<PathBuf> = None;
     let mut trace_path: Option<PathBuf> = None;
+    let mut pairs = false;
     let mut first_trace_step = true;
 
     let mut args = env::args();
@@ -185,6 +225,9 @@ fn main() {
             }
             MODIFY_OUTPUT_SHORT | MODIFY_OUTPUT_LONG => {
                 force_modify_output = true;
+            }
+            PAIRS_SHORT | PAIRS_LONG => {
+                pairs = true;
             }
             OUTPUT_SHORT | OUTPUT_LONG => {
                 let path = args
@@ -222,6 +265,9 @@ fn main() {
                     program and if some cannot be picked up, reduce this value
 
                     {default} {PRODUCTIVE_SENSITIVITY_VALUE}
+
+    {pairs_short}, {pairs_long} 
+                   save buttons pairs counts instead single
 
     {modify_output_short}, {modify_output_long}         
                     Force modify output file if it already exists
@@ -267,6 +313,8 @@ fn main() {
                     trace_short = TRACE_SHORT.cyan(),
                     trace_long = TRACE_LONG.cyan(),
                     trace_value = "<path>".cyan(),
+                    pairs_short = PAIRS_SHORT.cyan(),
+                    pairs_long = PAIRS_LONG.cyan(),
                 );
 
                 std::process::exit(0);
@@ -274,7 +322,7 @@ fn main() {
             _ => {
                 println!("Unhandled option: {}", arg);
                 std::process::exit(1);
-            },
+            }
         }
     }
 
@@ -291,8 +339,13 @@ fn main() {
         file.read_to_string(&mut contents)
             .expect(format!("file in {:?} exists but cannot be read", path).as_str());
 
-        key_counts = serde_yaml::from_str(&contents)
-            .expect("data in output file {:?} not valid and cannot be deserialize");
+        key_counts = serde_yaml::from_str(&contents).expect(
+            format!(
+                "data in output file {:?} not valid and cannot be deserialize",
+                path
+            )
+            .as_ref(),
+        );
 
         if !force_modify_output {
             println!(
@@ -324,6 +377,7 @@ fn main() {
 
     let device_state = DeviceState::new();
     let mut last_keys = Vec::new();
+    let mut last_pair = Vec::new();
 
     let mut stdout = stdout();
 
@@ -343,20 +397,36 @@ fn main() {
         for key in &keys {
             if !last_keys.contains(key) {
                 some = true;
-                *key_counts.entry(*key).or_insert(0) += 1;
+            }
+        }
+        if some {
+            if pairs {
+                let count_item = CountItem::Pair(last_pair.clone(), keys.clone());
+                *key_counts.entry(count_item.clone()).or_insert(0) += 1;
                 verbose!(
                     verbose,
                     "{:?} has been pressed {} times",
-                    key,
-                    key_counts[key]
+                    keys.clone(),
+                    key_counts[&count_item]
+                );
+
+                // Is this expensive?)
+                save_data(&key_counts, statistic_path.as_ref().unwrap());
+                last_pair = keys.clone();
+            } else {
+                let count_item = CountItem::Single(keys.clone());
+                *key_counts.entry(count_item.clone()).or_insert(0) += 1;
+                verbose!(
+                    verbose,
+                    "{:?} has been pressed {} times",
+                    keys.clone(),
+                    key_counts[&count_item]
                 );
 
                 // Is this expensive?)
                 save_data(&key_counts, statistic_path.as_ref().unwrap());
             }
-        }
-        if let Some(ref trace_path) = trace_path {
-            if some {
+            if let Some(ref trace_path) = trace_path {
                 let duration = start.elapsed();
                 let step = if first_trace_step {
                     first_trace_step = false;
@@ -368,8 +438,8 @@ fn main() {
                 last_duration = duration;
 
                 upend_trace(step, &trace_path);
-                some = false;
             }
+            some = false;
         }
 
         last_keys = keys;

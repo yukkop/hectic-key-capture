@@ -1,0 +1,31 @@
+Single(["S", "D", "Right"]): 2
+Single(["S", "D"]): 1
+Single(["S", "D", "F", "Up"]): 1
+Single(["D", "F", "Up"]): 1
+Single(["S", "F", "Up", "Right"]): 1
+Single(["F", "Right"]): 1
+Single(["Down"]): 3
+Single([]): 1
+Single(["LControl", "C"]): 1
+Single(["S"]): 1
+Single(["S", "D", "Down"]): 1
+Single(["S", "D", "Up"]): 2
+Single(["Up"]): 5
+Single(["D"]): 2
+Single(["Up", "Down"]): 1
+Single(["Right"]): 2
+Single(["F", "Up"]): 3
+Single(["D", "F", "Down"]): 3
+Single(["S", "D", "F", "Down"]): 3
+Single(["S", "D", "F", "Up", "Right"]): 1
+Single(["S", "D", "Up", "Down"]): 1
+Single(["S", "F", "Down"]): 1
+Single(["S", "Right", "Down"]): 1
+Single(["LControl"]): 1
+Single(["F", "Up", "Right"]): 2
+Single(["S", "Down"]): 1
+Single(["F", "Down"]): 8
+Single(["S", "F", "Up"]): 1
+Single(["S", "D", "Up", "Right"]): 2
+Single(["D", "F", "Up", "Right"]): 1
+Single(["F"]): 3

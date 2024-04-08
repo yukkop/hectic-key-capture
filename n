@@ -1,17 +1,0 @@
-Init("2024-04-08T13:15:24.580671104+02:00")
-First([H])
-Regular([E], 113.008846ms)
-Regular([L], 192.027079ms)
-Regular([L], 136.50167ms)
-Regular([O], 121.290778ms)
-Regular([W], 94.818654ms)
-Regular([Space], 98.818509ms)
-Regular([R], 387.029844ms)
-Regular([O], 169.296296ms)
-Regular([L], 235.724763ms)
-Regular([D], 256.736042ms)
-Regular([S, D], 75.91111ms)
-Regular([LControl], 3.057114771s)
-Regular([LControl, Z], 351.243035ms)
-Regular([LControl, X], 307.412855ms)
-Regular([LControl, C], 352.733395ms)

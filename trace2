@@ -1,1066 +1,0 @@
-Init("2024-04-08T13:12:45.870802002+02:00")
-First([F, J])
-Regular([F, J], 124.555µs)
-Regular([F, J], 152.056µs)
-Regular([F, J], 2.200269ms)
-Regular([F, J], 2.211229ms)
-Regular([F, J], 2.261825ms)
-Regular([F, J], 2.228973ms)
-Regular([F, J], 2.277624ms)
-Regular([F, J], 3.786272ms)
-Regular([F, J], 2.358777ms)
-Regular([F, J], 2.257957ms)
-Regular([F, J], 2.257697ms)
-Regular([F, J], 2.250694ms)
-Regular([F, J], 2.276582ms)
-Regular([F, J], 2.242238ms)
-Regular([F, J], 2.218453ms)
-Regular([F, J], 2.284558ms)
-Regular([F, J], 2.334671ms)
-Regular([F, J], 2.355601ms)
-Regular([F, J], 2.352656ms)
-Regular([F, J], 2.346814ms)
-Regular([F, J], 2.343779ms)
-Regular([F, J], 4.259442ms)
-Regular([F, J], 2.424521ms)
-Regular([F, J], 2.28075ms)
-Regular([F, J], 2.315917ms)
-Regular([F, J], 2.314794ms)
-Regular([F, J], 2.308553ms)
-Regular([F, J], 2.315445ms)
-Regular([F, J], 2.277304ms)
-Regular([F, J], 2.239302ms)
-Regular([F, J], 2.252317ms)
-Regular([F, J], 2.225015ms)
-Regular([F, J], 2.281832ms)
-Regular([F, J], 2.233422ms)
-Regular([F, J], 2.334341ms)
-Regular([F, J], 3.429641ms)
-Regular([F, J], 2.321387ms)
-Regular([F, J], 2.262005ms)
-Regular([F, J], 2.250032ms)
-Regular([S, D, F, J], 2.667718ms)
-Regular([S, D, F, J], 157.256µs)
-Regular([S, D, F, J], 118.523µs)
-Regular([S, D, F], 2.225867ms)
-Regular([S, D, F], 2.211179ms)
-Regular([S, D, F], 2.255774ms)
-Regular([S, D, F], 2.291911ms)
-Regular([S, D, F], 2.292021ms)
-Regular([S, D, F], 2.343419ms)
-Regular([S, D, F], 2.266473ms)
-Regular([S, D, F], 2.253369ms)
-Regular([S, D, F], 2.279217ms)
-Regular([S, D, F], 2.670774ms)
-Regular([S, D, K, L], 2.718884ms)
-Regular([S, D, K, L], 154.772µs)
-Regular([S, D, K, L], 117.901µs)
-Regular([S, D, K, L], 2.290218ms)
-Regular([S, D, K, L], 2.330584ms)
-Regular([S, D, K, L], 2.331606ms)
-Regular([S, D, K, L], 2.311719ms)
-Regular([S, D, K, L], 2.340432ms)
-Regular([S, D, K, L], 2.313342ms)
-Regular([S, D, K, L], 2.299515ms)
-Regular([S, D, K, L], 2.288074ms)
-Regular([S, D, K, L], 2.3231ms)
-Regular([S, D, K, L], 2.270702ms)
-Regular([S, D, K, L], 2.359097ms)
-Regular([S, D, K, L], 2.361763ms)
-Regular([S, D, L], 3.181014ms)
-Regular([S, D], 2.370298ms)
-Regular([S, D], 2.323271ms)
-Regular([S, D], 2.312189ms)
-Regular([S, D], 2.311067ms)
-Regular([S, D], 2.291671ms)
-Regular([S, D], 2.258839ms)
-Regular([S, D], 2.326928ms)
-Regular([S, D], 2.310967ms)
-Regular([S, D], 2.27028ms)
-Regular([S, D], 2.318532ms)
-Regular([S, D], 2.369166ms)
-Regular([S, D], 2.379366ms)
-Regular([S, D], 3.733914ms)
-Regular([S, D], 2.336395ms)
-Regular([S, D], 2.301239ms)
-Regular([S, D], 2.267034ms)
-Regular([S, D, J], 2.536692ms)
-Regular([S, D, J], 178.405µs)
-Regular([S, D, J], 2.246476ms)
-Regular([S, D, J], 2.253118ms)
-Regular([S, D, J], 2.240956ms)
-Regular([S, D, J], 2.239833ms)
-Regular([S, D, J], 2.272585ms)
-Regular([S, D, J], 2.299876ms)
-Regular([S, D, J], 2.34399ms)
-Regular([S, D, J], 2.347586ms)
-Regular([S, D, J], 2.368315ms)
-Regular([S, D, J], 4.547083ms)
-Regular([D, F, J], 2.571688ms)
-Regular([D, F, J], 150.483µs)
-Regular([D, F, J], 2.240604ms)
-Regular([D, F, J], 2.218093ms)
-Regular([D, F, J], 2.254561ms)
-Regular([D, F, J], 2.257066ms)
-Regular([D, F, J], 2.300738ms)
-Regular([D, F], 2.40311ms)
-Regular([D, F], 2.244682ms)
-Regular([D, F], 2.282825ms)
-Regular([D, F], 2.301609ms)
-Regular([D, F], 2.334802ms)
-Regular([D, F], 2.333119ms)
-Regular([D, F], 4.341677ms)
-Regular([D, F], 2.343989ms)
-Regular([D, F], 2.298223ms)
-Regular([D, F], 2.343128ms)
-Regular([D, F], 2.289476ms)
-Regular([D, F], 2.247709ms)
-Regular([F, K], 2.385998ms)
-Regular([F, K], 75.803µs)
-Regular([F, K, L], 886.507µs)
-Regular([F, K, L, Comma], 853.596µs)
-Regular([F, K, L, Comma], 2.219184ms)
-Regular([F, K, L, Comma], 2.29655ms)
-Regular([F, K, L, Comma], 2.294937ms)
-Regular([F, K, L, Comma], 2.327959ms)
-Regular([F, K, L, Comma], 2.300007ms)
-Regular([F, K, L, Comma], 2.294426ms)
-Regular([F, K, L, Comma], 3.068893ms)
-Regular([F, K, L, Comma], 2.322468ms)
-Regular([F, K, L, Comma], 2.246015ms)
-Regular([F, K, L, Comma], 2.268678ms)
-Regular([F, K, L, Comma], 2.283245ms)
-Regular([F, Comma], 2.270401ms)
-Regular([F], 2.236106ms)
-Regular([F], 2.272194ms)
-Regular([F], 2.273336ms)
-Regular([F], 2.318071ms)
-Regular([F], 2.249391ms)
-Regular([F], 2.218383ms)
-Regular([F], 2.402229ms)
-Regular([F], 2.340042ms)
-Regular([F], 3.593419ms)
-Regular([F], 2.330945ms)
-Regular([F], 2.300107ms)
-Regular([F], 2.300667ms)
-Regular([F], 2.291281ms)
-Regular([F], 2.289406ms)
-Regular([F], 2.262947ms)
-Regular([F], 2.251756ms)
-Regular([F], 2.345291ms)
-Regular([F], 2.34977ms)
-Regular([S, D, F], 2.711711ms)
-Regular([S, D, F], 180.37µs)
-Regular([S, D, F, J], 228.94µs)
-Regular([S, D, F, J], 66.966µs)
-Regular([S, D, F, J], 2.268508ms)
-Regular([S, D, F, J], 2.296409ms)
-Regular([S, D, F, J], 2.33371ms)
-Regular([S, D, F, J], 2.730326ms)
-Regular([S, D, F, J], 2.400035ms)
-Regular([S, D, F, J], 2.319423ms)
-Regular([S, D, F, J], 2.269639ms)
-Regular([S, D, F, J], 2.262626ms)
-Regular([S, D, F, J], 2.244352ms)
-Regular([S, D, J], 2.229123ms)
-Regular([S, D], 2.245875ms)
-Regular([S, D], 2.244813ms)
-Regular([S, D], 2.260191ms)
-Regular([S, D], 2.225336ms)
-Regular([S, D], 2.292603ms)
-Regular([S, D], 2.282834ms)
-Regular([S, D], 2.347526ms)
-Regular([S, D], 4.864701ms)
-Regular([S, D], 2.346584ms)
-Regular([S, D], 2.257757ms)
-Regular([S, D], 2.300518ms)
-Regular([S, D, L], 2.45654ms)
-Regular([S, D, L], 133.982µs)
-Regular([S, D, L], 2.235305ms)
-Regular([S, D, L], 2.212021ms)
-Regular([S, D, L], 2.26455ms)
-Regular([S, D, L], 2.308933ms)
-Regular([S, D, L], 2.304305ms)
-Regular([S, D, L], 2.319844ms)
-Regular([S, D, L], 2.283535ms)
-Regular([S, D, K, L], 2.612084ms)
-Regular([S, D, K, L], 167.996µs)
-Regular([S, D, K, L], 3.761676ms)
-Regular([S, D, K, L], 2.337357ms)
-Regular([S, D, K, L], 2.280379ms)
-Regular([S, D, K, L], 2.272405ms)
-Regular([S, D, K, L], 2.266112ms)
-Regular([S, D, K, L], 2.277154ms)
-Regular([S, D, K, L], 2.285439ms)
-Regular([S, D, K, L], 2.330033ms)
-Regular([S, D, K, L], 2.312791ms)
-Regular([S, D, K, L], 2.282133ms)
-Regular([D, F, L], 2.516373ms)
-Regular([D, F, L], 134.573µs)
-Regular([D, F], 2.212622ms)
-Regular([D, F], 2.196763ms)
-Regular([D, F], 2.237008ms)
-Regular([D, F], 3.147641ms)
-Regular([D, F], 2.414552ms)
-Regular([D, F], 2.301369ms)
-Regular([F], 2.221478ms)
-Regular([F], 2.222962ms)
-Regular([F], 2.248039ms)
-Regular([F], 2.24354ms)
-Regular([F], 2.292853ms)
-Regular([F], 2.337267ms)
-Regular([F], 2.407088ms)
-Regular([F], 2.378043ms)
-Regular([F], 2.403521ms)
-Regular([F], 2.340833ms)
-Regular([F], 2.41309ms)
-Regular([F], 3.403402ms)
-Regular([F], 2.308292ms)
-Regular([F], 2.31282ms)
-Regular([F], 2.285459ms)
-Regular([F], 2.255303ms)
-Regular([F], 2.298904ms)
-Regular([F], 2.269339ms)
-Regular([F], 2.283265ms)
-Regular([F], 2.303343ms)
-Regular([F], 2.342577ms)
-Regular([F], 2.394584ms)
-Regular([F], 2.384796ms)
-Regular([F, K, L], 2.68481ms)
-Regular([F, K, L], 188.445µs)
-Regular([F, K, L], 131.698µs)
-Regular([F, K, L], 3.683719ms)
-Regular([F, K, L], 2.330684ms)
-Regular([F, K, L], 2.258378ms)
-Regular([F, K, L], 2.217812ms)
-Regular([F, K, L], 2.23263ms)
-Regular([F, K, L], 2.268397ms)
-Regular([F, K, L], 2.264369ms)
-Regular([F, K, L], 2.268598ms)
-Regular([F, K, L], 2.356132ms)
-Regular([F, K, L], 2.366912ms)
-Regular([F, K, L], 2.361412ms)
-Regular([F], 2.308863ms)
-Regular([F, Semicolon], 1.315064ms)
-Regular([F], 2.26435ms)
-Regular([F], 4.203146ms)
-Regular([F], 2.324904ms)
-Regular([F], 2.333749ms)
-Regular([F], 2.248861ms)
-Regular([F], 2.326636ms)
-Regular([F], 2.246025ms)
-Regular([F], 2.265281ms)
-Regular([F], 2.244212ms)
-Regular([E, F], 2.55723ms)
-Regular([E, F], 185.74µs)
-Regular([E, F], 2.233621ms)
-Regular([E, F], 2.281201ms)
-Regular([E, F], 2.263899ms)
-Regular([E, F], 2.267976ms)
-Regular([E, F], 2.25367ms)
-Regular([E, F], 3.384546ms)
-Regular([E, F], 2.316047ms)
-Regular([E, F], 2.278145ms)
-Regular([E, F], 2.314063ms)
-Regular([F, M], 2.552722ms)
-Regular([F, M], 146.486µs)
-Regular([F, M], 2.245534ms)
-Regular([F, M], 2.236737ms)
-Regular([F, M], 2.252678ms)
-Regular([F, M], 2.277484ms)
-Regular([M], 2.283255ms)
-Regular([], 2.213574ms)
-Regular([], 2.20118ms)
-Regular([], 2.235105ms)
-Regular([], 2.284607ms)
-Regular([], 2.633454ms)
-Regular([], 2.295578ms)
-Regular([], 2.251055ms)
-Regular([], 2.241206ms)
-Regular([], 2.238821ms)
-Regular([], 2.258248ms)
-Regular([], 2.222631ms)
-Regular([], 2.231017ms)
-Regular([], 2.377943ms)
-Regular([], 2.329942ms)
-Regular([], 2.388123ms)
-Regular([], 2.392711ms)
-Regular([], 2.32856ms)
-Regular([], 2.380277ms)
-Regular([], 3.248902ms)
-Regular([], 2.330433ms)
-Regular([], 2.288776ms)
-Regular([], 2.281822ms)
-Regular([], 2.288926ms)
-Regular([], 2.266934ms)
-Regular([], 2.347977ms)
-Regular([], 2.395466ms)
-Regular([], 2.329622ms)
-Regular([], 2.300608ms)
-Regular([], 2.330404ms)
-Regular([], 2.333008ms)
-Regular([], 2.392621ms)
-Regular([], 2.395446ms)
-Regular([], 2.539577ms)
-Regular([], 2.402539ms)
-Regular([], 2.29119ms)
-Regular([], 2.293334ms)
-Regular([], 2.263217ms)
-Regular([], 2.286241ms)
-Regular([], 2.308382ms)
-Regular([], 2.335674ms)
-Regular([], 2.319944ms)
-Regular([], 2.330784ms)
-Regular([], 2.30719ms)
-Regular([], 2.298624ms)
-Regular([], 2.328771ms)
-Regular([G], 2.564764ms)
-Regular([G], 155.804µs)
-Regular([G], 2.313611ms)
-Regular([G], 2.273758ms)
-Regular([G], 2.262135ms)
-Regular([G], 2.251084ms)
-Regular([G], 2.252668ms)
-Regular([G], 2.234203ms)
-Regular([G], 2.246065ms)
-Regular([G], 2.234964ms)
-Regular([G], 2.264489ms)
-Regular([G], 2.26428ms)
-Regular([G], 2.188406ms)
-Regular([G], 2.278286ms)
-Regular([G], 2.38718ms)
-Regular([G], 2.32813ms)
-Regular([G], 4.222903ms)
-Regular([G], 2.39195ms)
-Regular([G], 2.348898ms)
-Regular([G], 2.266364ms)
-Regular([G], 2.292863ms)
-Regular([G], 2.235595ms)
-Regular([G], 2.265341ms)
-Regular([G], 2.388503ms)
-Regular([G], 2.363166ms)
-Regular([G], 2.277263ms)
-Regular([G], 2.280991ms)
-Regular([G], 2.270431ms)
-Regular([E, G], 2.76953ms)
-Regular([E, G, B], 703.493µs)
-Regular([E, G, B], 355.228µs)
-Regular([E, O, G, B], 512.404µs)
-Regular([E, O, G, B], 2.255222ms)
-Regular([E, O, G, B], 2.304936ms)
-Regular([E, O, G, B], 2.441072ms)
-Regular([E, O, G, B], 2.324973ms)
-Regular([E, O, G, B], 2.285319ms)
-Regular([E, O, G, B], 2.240876ms)
-Regular([E, O, G, B], 2.278375ms)
-Regular([O, G, B], 2.303463ms)
-Regular([G, B], 2.271774ms)
-Regular([G, B], 2.215407ms)
-Regular([G, B], 2.296851ms)
-Regular([G, B], 2.284297ms)
-Regular([G, B], 2.338238ms)
-Regular([G, B], 2.412698ms)
-Regular([G, B], 4.504163ms)
-Regular([G, B], 2.321477ms)
-Regular([G, B], 2.284487ms)
-Regular([G, J], 2.491417ms)
-Regular([G, J], 160.833µs)
-Regular([G, J], 2.230575ms)
-Regular([G, J], 2.270672ms)
-Regular([G, J], 2.239122ms)
-Regular([G, J], 2.271853ms)
-Regular([G, J], 2.254962ms)
-Regular([G, J], 2.186613ms)
-Regular([G, J], 2.246296ms)
-Regular([G, J], 2.329552ms)
-Regular([G, J], 2.297471ms)
-Regular([G, J], 4.377826ms)
-Regular([G, J], 2.290528ms)
-Regular([], 2.256625ms)
-Regular([], 2.235525ms)
-Regular([], 2.219636ms)
-Regular([], 2.246285ms)
-Regular([], 2.241527ms)
-Regular([], 2.299565ms)
-Regular([], 2.266774ms)
-Regular([], 2.223433ms)
-Regular([], 2.25936ms)
-Regular([], 2.317018ms)
-Regular([], 2.290158ms)
-Regular([], 2.275731ms)
-Regular([], 2.961962ms)
-Regular([L], 2.656667ms)
-Regular([L], 142.398µs)
-Regular([L], 2.258889ms)
-Regular([L], 2.269299ms)
-Regular([L], 2.258759ms)
-Regular([L], 2.244362ms)
-Regular([L], 2.479634ms)
-Regular([L], 2.287453ms)
-Regular([W, L], 2.738992ms)
-Regular([W, L], 205.256µs)
-Regular([W], 2.227871ms)
-Regular([W], 2.16907ms)
-Regular([W], 2.241357ms)
-Regular([W], 2.255242ms)
-Regular([W], 2.25931ms)
-Regular([W], 3.231448ms)
-Regular([W], 2.346574ms)
-Regular([W], 2.327699ms)
-Regular([W], 2.358296ms)
-Regular([W], 2.308833ms)
-Regular([W], 2.338289ms)
-Regular([W], 2.338569ms)
-Regular([W], 2.3285ms)
-Regular([W], 2.289176ms)
-Regular([W], 2.287583ms)
-Regular([W], 2.374647ms)
-Regular([W], 2.392761ms)
-Regular([W], 2.300477ms)
-Regular([W], 2.26963ms)
-Regular([W], 2.322198ms)
-Regular([W], 2.38665ms)
-Regular([W], 2.31259ms)
-Regular([], 2.291661ms)
-Regular([], 2.300858ms)
-Regular([], 2.300627ms)
-Regular([], 2.270201ms)
-Regular([], 2.265872ms)
-Regular([], 2.273386ms)
-Regular([], 2.253339ms)
-Regular([], 2.288435ms)
-Regular([], 2.245354ms)
-Regular([], 2.264369ms)
-Regular([], 2.278827ms)
-Regular([], 3.027585ms)
-Regular([], 2.407238ms)
-Regular([], 2.283285ms)
-Regular([], 2.308412ms)
-Regular([], 2.294416ms)
-Regular([], 2.324403ms)
-Regular([], 2.266594ms)
-Regular([], 2.214585ms)
-Regular([], 2.204547ms)
-Regular([], 2.202574ms)
-Regular([], 2.171174ms)
-Regular([], 2.208364ms)
-Regular([], 2.208845ms)
-Regular([], 2.207653ms)
-Regular([], 3.069343ms)
-Regular([], 2.276873ms)
-Regular([], 2.256285ms)
-Regular([], 2.231868ms)
-Regular([], 2.230055ms)
-Regular([], 2.267084ms)
-Regular([], 2.218984ms)
-Regular([], 2.204547ms)
-Regular([], 2.204016ms)
-Regular([], 2.198776ms)
-Regular([], 2.225176ms)
-Regular([], 2.210668ms)
-Regular([], 2.199588ms)
-Regular([], 2.202022ms)
-Regular([], 2.202423ms)
-Regular([], 2.665835ms)
-Regular([], 2.27532ms)
-Regular([], 2.270351ms)
-Regular([], 2.2437ms)
-Regular([], 2.232951ms)
-Regular([], 2.237469ms)
-Regular([], 2.171494ms)
-Regular([], 2.181063ms)
-Regular([], 2.197914ms)
-Regular([], 2.228382ms)
-Regular([], 2.206741ms)
-Regular([], 2.207443ms)
-Regular([], 2.204797ms)
-Regular([], 2.200549ms)
-Regular([], 3.393514ms)
-Regular([], 2.291871ms)
-Regular([], 2.251415ms)
-Regular([], 2.244182ms)
-Regular([], 2.239733ms)
-Regular([], 2.247808ms)
-Regular([], 2.210398ms)
-Regular([], 2.185181ms)
-Regular([], 2.198014ms)
-Regular([], 2.21153ms)
-Regular([], 2.167297ms)
-Regular([], 2.213885ms)
-Regular([], 2.208915ms)
-Regular([], 2.197814ms)
-Regular([], 2.200219ms)
-Regular([], 2.570776ms)
-Regular([], 2.273426ms)
-Regular([], 2.26975ms)
-Regular([], 2.226288ms)
-Regular([], 2.226067ms)
-Regular([], 2.220828ms)
-Regular([], 2.220326ms)
-Regular([], 2.170203ms)
-Regular([], 2.200649ms)
-Regular([], 2.204457ms)
-Regular([], 2.201301ms)
-Regular([], 2.20121ms)
-Regular([], 2.194318ms)
-Regular([], 2.204968ms)
-Regular([], 2.202764ms)
-Regular([], 2.250543ms)
-Regular([], 2.291571ms)
-Regular([], 2.251164ms)
-Regular([], 2.233311ms)
-Regular([], 2.236948ms)
-Regular([], 2.247689ms)
-Regular([], 2.228532ms)
-Regular([], 2.204086ms)
-Regular([], 2.23804ms)
-Regular([], 2.220336ms)
-Regular([], 2.196182ms)
-Regular([], 2.213714ms)
-Regular([], 2.207823ms)
-Regular([], 2.211119ms)
-Regular([], 3.657971ms)
-Regular([], 2.348648ms)
-Regular([], 2.425072ms)
-Regular([], 2.270431ms)
-Regular([], 2.221399ms)
-Regular([], 2.237719ms)
-Regular([], 2.190541ms)
-Regular([], 2.201261ms)
-Regular([], 2.207622ms)
-Regular([], 2.200159ms)
-Regular([], 2.198997ms)
-Regular([], 2.21706ms)
-Regular([], 2.205339ms)
-Regular([], 2.197073ms)
-Regular([], 3.701122ms)
-Regular([], 2.282734ms)
-Regular([], 2.253469ms)
-Regular([], 2.247768ms)
-Regular([], 2.238841ms)
-Regular([], 2.232009ms)
-Regular([], 2.194568ms)
-Regular([], 2.217241ms)
-Regular([], 2.214315ms)
-Regular([], 2.182656ms)
-Regular([], 2.207693ms)
-Regular([], 2.212773ms)
-Regular([], 2.202823ms)
-Regular([], 2.198576ms)
-Regular([], 2.202143ms)
-Regular([], 2.271372ms)
-Regular([], 2.28596ms)
-Regular([], 2.34961ms)
-Regular([], 2.37612ms)
-Regular([], 2.346594ms)
-Regular([], 2.401828ms)
-Regular([], 2.28067ms)
-Regular([], 2.268999ms)
-Regular([], 2.255793ms)
-Regular([], 2.261214ms)
-Regular([], 2.256394ms)
-Regular([], 2.255012ms)
-Regular([], 2.191442ms)
-Regular([], 2.230015ms)
-Regular([], 2.625419ms)
-Regular([], 2.4191ms)
-Regular([], 2.329783ms)
-Regular([], 2.282534ms)
-Regular([], 2.311628ms)
-Regular([], 2.244312ms)
-Regular([], 2.199758ms)
-Regular([], 2.210368ms)
-Regular([], 2.221328ms)
-Regular([], 2.206451ms)
-Regular([], 2.211089ms)
-Regular([], 2.198375ms)
-Regular([], 2.221199ms)
-Regular([], 2.212612ms)
-Regular([], 2.199337ms)
-Regular([], 2.248079ms)
-Regular([], 2.367884ms)
-Regular([], 2.375438ms)
-Regular([], 2.312761ms)
-Regular([], 2.287543ms)
-Regular([], 2.260262ms)
-Regular([], 2.22733ms)
-Regular([], 2.202743ms)
-Regular([], 2.208565ms)
-Regular([], 2.197233ms)
-Regular([], 2.20599ms)
-Regular([], 2.212291ms)
-Regular([], 2.201542ms)
-Regular([], 2.202884ms)
-Regular([], 3.292874ms)
-Regular([], 2.407548ms)
-Regular([], 2.247288ms)
-Regular([], 2.23831ms)
-Regular([], 2.223593ms)
-Regular([], 2.217461ms)
-Regular([], 2.238451ms)
-Regular([], 2.222771ms)
-Regular([], 2.217011ms)
-Regular([], 2.197714ms)
-Regular([], 2.197684ms)
-Regular([], 2.194779ms)
-Regular([], 2.203044ms)
-Regular([], 2.204657ms)
-Regular([], 2.199878ms)
-Regular([], 2.219495ms)
-Regular([], 2.307511ms)
-Regular([], 2.263468ms)
-Regular([], 2.242037ms)
-Regular([], 2.255032ms)
-Regular([], 2.235014ms)
-Regular([], 2.231037ms)
-Regular([], 2.200269ms)
-Regular([], 2.222902ms)
-Regular([], 2.205759ms)
-Regular([], 2.21141ms)
-Regular([], 2.203094ms)
-Regular([], 2.198115ms)
-Regular([], 2.202633ms)
-Regular([], 2.205329ms)
-Regular([], 2.242067ms)
-Regular([], 2.278967ms)
-Regular([], 2.258759ms)
-Regular([], 2.239413ms)
-Regular([], 2.20112ms)
-Regular([], 2.226448ms)
-Regular([], 2.192094ms)
-Regular([], 2.201942ms)
-Regular([], 2.199287ms)
-Regular([], 2.165814ms)
-Regular([], 2.210559ms)
-Regular([], 2.200208ms)
-Regular([], 2.206772ms)
-Regular([], 2.209496ms)
-Regular([], 2.164482ms)
-Regular([], 2.243059ms)
-Regular([], 2.344961ms)
-Regular([], 2.257386ms)
-Regular([], 2.224996ms)
-Regular([], 2.20644ms)
-Regular([], 2.231428ms)
-Regular([], 2.231878ms)
-Regular([], 2.207653ms)
-Regular([], 2.230827ms)
-Regular([], 2.201ms)
-Regular([], 2.181914ms)
-Regular([], 2.200409ms)
-Regular([], 2.204227ms)
-Regular([], 2.200108ms)
-Regular([], 2.197815ms)
-Regular([], 3.964097ms)
-Regular([], 2.282653ms)
-Regular([], 2.241066ms)
-Regular([], 2.239222ms)
-Regular([], 2.237449ms)
-Regular([], 2.23805ms)
-Regular([], 2.230596ms)
-Regular([], 2.214075ms)
-Regular([], 2.210348ms)
-Regular([], 2.203906ms)
-Regular([], 2.207673ms)
-Regular([], 2.207753ms)
-Regular([], 2.217792ms)
-Regular([], 2.203174ms)
-Regular([], 2.247367ms)
-Regular([], 2.284849ms)
-Regular([], 2.246235ms)
-Regular([], 2.71148ms)
-Regular([], 2.238211ms)
-Regular([], 2.231247ms)
-Regular([], 2.215517ms)
-Regular([], 2.20048ms)
-Regular([], 2.208564ms)
-Regular([], 2.210368ms)
-Regular([], 2.203004ms)
-Regular([], 2.201752ms)
-Regular([], 2.212161ms)
-Regular([], 2.209647ms)
-Regular([], 4.859822ms)
-Regular([], 2.261534ms)
-Regular([], 2.231938ms)
-Regular([], 2.226118ms)
-Regular([], 2.257376ms)
-Regular([], 2.283666ms)
-Regular([], 2.231478ms)
-Regular([], 2.212682ms)
-Regular([], 2.219816ms)
-Regular([], 2.2064ms)
-Regular([], 2.289387ms)
-Regular([], 2.273637ms)
-Regular([], 2.260462ms)
-Regular([], 2.2542ms)
-Regular([], 2.506485ms)
-Regular([], 2.406417ms)
-Regular([], 2.216389ms)
-Regular([], 2.242689ms)
-Regular([], 2.238721ms)
-Regular([], 2.222721ms)
-Regular([], 2.210118ms)
-Regular([], 2.21152ms)
-Regular([], 2.210598ms)
-Regular([], 2.204317ms)
-Regular([], 2.201341ms)
-Regular([], 2.17445ms)
-Regular([], 2.215698ms)
-Regular([], 2.204126ms)
-Regular([], 2.198756ms)
-Regular([], 2.696192ms)
-Regular([], 2.395496ms)
-Regular([], 2.390757ms)
-Regular([], 2.367374ms)
-Regular([], 2.329862ms)
-Regular([], 2.230616ms)
-Regular([], 2.231638ms)
-Regular([], 2.207132ms)
-Regular([], 2.206371ms)
-Regular([], 2.207322ms)
-Regular([], 2.179169ms)
-Regular([], 2.208515ms)
-Regular([], 2.199938ms)
-Regular([], 2.199107ms)
-Regular([], 3.191864ms)
-Regular([], 2.248089ms)
-Regular([], 2.232239ms)
-Regular([], 2.236887ms)
-Regular([], 2.233732ms)
-Regular([], 2.220337ms)
-Regular([], 2.215227ms)
-Regular([], 2.186213ms)
-Regular([], 2.206079ms)
-Regular([], 2.199207ms)
-Regular([], 2.163821ms)
-Regular([], 2.20614ms)
-Regular([], 2.210458ms)
-Regular([], 2.201481ms)
-Regular([], 2.199698ms)
-Regular([], 2.619397ms)
-Regular([], 2.394765ms)
-Regular([], 2.235936ms)
-Regular([], 2.236667ms)
-Regular([], 2.207092ms)
-Regular([], 2.235796ms)
-Regular([], 2.245243ms)
-Regular([], 2.208605ms)
-Regular([], 2.205359ms)
-Regular([], 2.21186ms)
-Regular([], 2.210619ms)
-Regular([], 2.173568ms)
-Regular([], 2.204948ms)
-Regular([], 2.197815ms)
-Regular([], 2.212351ms)
-Regular([], 2.258168ms)
-Regular([], 2.315416ms)
-Regular([], 2.24376ms)
-Regular([], 2.229664ms)
-Regular([], 2.23266ms)
-Regular([], 2.263849ms)
-Regular([], 2.219886ms)
-Regular([], 2.203074ms)
-Regular([], 2.219134ms)
-Regular([], 2.199868ms)
-Regular([], 2.204447ms)
-Regular([], 2.196582ms)
-Regular([], 2.199728ms)
-Regular([], 2.20062ms)
-Regular([], 3.709808ms)
-Regular([], 2.279689ms)
-Regular([K], 2.588619ms)
-Regular([K], 181.552µs)
-Regular([K], 2.215026ms)
-Regular([K], 2.266413ms)
-Regular([K], 2.62068ms)
-Regular([K], 2.265612ms)
-Regular([K], 2.239894ms)
-Regular([K], 2.289747ms)
-Regular([K], 2.223132ms)
-Regular([K], 2.20634ms)
-Regular([K], 2.173469ms)
-Regular([K], 2.210949ms)
-Regular([K], 2.213894ms)
-Regular([K], 4.26853ms)
-Regular([K], 2.277424ms)
-Regular([K], 2.275971ms)
-Regular([K], 2.22753ms)
-Regular([K], 2.211761ms)
-Regular([K], 2.248129ms)
-Regular([K], 2.23789ms)
-Regular([K], 2.214615ms)
-Regular([K], 2.214837ms)
-Regular([K], 2.214425ms)
-Regular([K], 2.189639ms)
-Regular([K], 2.21678ms)
-Regular([K], 2.210969ms)
-Regular([K], 2.212492ms)
-Regular([K], 3.007367ms)
-Regular([K], 2.277254ms)
-Regular([K], 2.253159ms)
-Regular([K], 2.237629ms)
-Regular([K], 2.233581ms)
-Regular([K], 2.251616ms)
-Regular([K], 2.235595ms)
-Regular([D, K], 2.536752ms)
-Regular([D], 180.049µs)
-Regular([D], 2.226448ms)
-Regular([D], 2.212762ms)
-Regular([D], 2.210829ms)
-Regular([D], 2.206521ms)
-Regular([D], 2.209446ms)
-Regular([D], 2.213965ms)
-Regular([D], 2.186733ms)
-Regular([D], 2.356784ms)
-Regular([D], 2.296059ms)
-Regular([D], 2.262796ms)
-Regular([D], 2.316949ms)
-Regular([D], 2.372022ms)
-Regular([D], 2.343318ms)
-Regular([D], 2.244772ms)
-Regular([D], 2.225777ms)
-Regular([D], 2.200139ms)
-Regular([D], 2.226929ms)
-Regular([D], 2.205599ms)
-Regular([D], 2.23828ms)
-Regular([D], 2.244943ms)
-Regular([], 2.22205ms)
-Regular([], 4.161408ms)
-Regular([], 2.294396ms)
-Regular([], 2.307371ms)
-Regular([], 2.251956ms)
-Regular([], 2.2329ms)
-Regular([], 2.230907ms)
-Regular([], 2.255332ms)
-Regular([], 2.183197ms)
-Regular([], 2.201491ms)
-Regular([], 2.20054ms)
-Regular([], 2.199527ms)
-Regular([], 2.204166ms)
-Regular([], 2.185411ms)
-Regular([], 2.203966ms)
-Regular([], 2.629727ms)
-Regular([], 2.272655ms)
-Regular([], 2.234454ms)
-Regular([], 2.23816ms)
-Regular([], 2.229644ms)
-Regular([], 2.223873ms)
-Regular([], 2.228843ms)
-Regular([], 2.222891ms)
-Regular([], 2.210428ms)
-Regular([], 2.201932ms)
-Regular([], 2.223804ms)
-Regular([], 2.217361ms)
-Regular([], 2.213233ms)
-Regular([], 2.199628ms)
-Regular([], 2.191602ms)
-Regular([], 2.318211ms)
-Regular([], 2.271443ms)
-Regular([], 2.249301ms)
-Regular([], 2.246937ms)
-Regular([], 2.231748ms)
-Regular([], 2.245243ms)
-Regular([], 2.23776ms)
-Regular([], 2.203445ms)
-Regular([], 2.20602ms)
-Regular([], 2.202573ms)
-Regular([], 2.204978ms)
-Regular([], 2.202453ms)
-Regular([], 2.181553ms)
-Regular([], 2.20048ms)
-Regular([], 2.198866ms)
-Regular([], 2.252688ms)
-Regular([], 2.270791ms)
-Regular([], 2.231588ms)
-Regular([], 2.2326ms)
-Regular([], 2.231487ms)
-Regular([], 2.241677ms)
-Regular([], 2.203164ms)
-Regular([], 2.207553ms)
-Regular([], 2.201141ms)
-Regular([], 2.220046ms)
-Regular([], 2.217321ms)
-Regular([], 2.21681ms)
-Regular([], 2.199828ms)
-Regular([], 2.214816ms)
-Regular([], 2.200159ms)
-Regular([], 2.251976ms)
-Regular([], 2.269129ms)
-Regular([], 2.24877ms)
-Regular([], 2.232259ms)
-Regular([], 2.238471ms)
-Regular([], 2.23304ms)
-Regular([], 2.223823ms)
-Regular([], 2.200951ms)
-Regular([], 2.198605ms)
-Regular([], 2.164632ms)
-Regular([], 2.201502ms)
-Regular([], 2.197483ms)
-Regular([], 2.201131ms)
-Regular([], 2.199387ms)
-Regular([], 2.226218ms)
-Regular([], 2.297933ms)
-Regular([], 2.264149ms)
-Regular([], 2.246716ms)
-Regular([], 2.236207ms)
-Regular([], 2.226748ms)
-Regular([], 2.230436ms)
-Regular([], 2.22241ms)
-Regular([], 2.213464ms)
-Regular([], 2.207553ms)
-Regular([], 2.207973ms)
-Regular([], 2.213254ms)
-Regular([], 2.20645ms)
-Regular([], 2.199838ms)
-Regular([], 2.200299ms)
-Regular([], 2.227561ms)
-Regular([], 2.25939ms)
-Regular([], 2.284808ms)
-Regular([], 2.244031ms)
-Regular([], 2.229163ms)
-Regular([], 2.23807ms)
-Regular([], 2.240395ms)
-Regular([], 2.233401ms)
-Regular([], 2.214315ms)
-Regular([], 2.21675ms)
-Regular([], 2.21697ms)
-Regular([], 2.193326ms)
-Regular([], 2.201151ms)
-Regular([], 2.197323ms)
-Regular([], 2.200199ms)
-Regular([], 2.214927ms)
-Regular([], 2.297982ms)
-Regular([], 2.275361ms)
-Regular([], 2.241606ms)
-Regular([], 2.229494ms)
-Regular([], 2.224404ms)
-Regular([], 2.23278ms)
-Regular([], 2.218704ms)
-Regular([], 2.207352ms)
-Regular([], 2.222241ms)
-Regular([], 2.207001ms)
-Regular([], 2.199227ms)
-Regular([], 2.201672ms)
-Regular([], 2.207382ms)
-Regular([], 2.209597ms)
-Regular([], 3.336767ms)
-Regular([], 2.277183ms)
-Regular([], 2.266624ms)
-Regular([], 2.250513ms)
-Regular([], 2.235566ms)
-Regular([], 2.249281ms)
-Regular([], 2.193116ms)
-Regular([], 2.202483ms)
-Regular([], 2.205318ms)
-Regular([], 2.207563ms)
-Regular([], 2.207643ms)
-Regular([], 2.204998ms)
-Regular([], 2.17954ms)
-Regular([], 2.229944ms)
-Regular([], 2.2062ms)
-Regular([], 2.236027ms)
-Regular([], 2.349239ms)
-Regular([], 2.368816ms)
-Regular([], 2.335483ms)
-Regular([], 2.327879ms)
-Regular([], 2.238842ms)
-Regular([], 2.203986ms)
-Regular([], 2.217341ms)
-Regular([], 2.186743ms)
-Regular([], 2.223854ms)
-Regular([], 2.206591ms)
-Regular([], 2.202322ms)
-Regular([], 2.196121ms)
-Regular([], 2.213514ms)
-Regular([], 3.655907ms)
-Regular([], 2.29108ms)
-Regular([], 2.290699ms)
-Regular([], 2.247709ms)
-Regular([], 2.229083ms)
-Regular([], 2.235715ms)
-Regular([], 2.236197ms)
-Regular([], 2.210418ms)
-Regular([], 2.220938ms)
-Regular([], 2.199227ms)
-Regular([], 2.206741ms)
-Regular([], 2.222561ms)
-Regular([], 2.24318ms)
-Regular([], 2.232038ms)
-Regular([], 3.014942ms)
-Regular([], 2.281672ms)
-Regular([], 2.267886ms)
-Regular([], 2.268097ms)
-Regular([], 2.232038ms)
-Regular([], 2.239323ms)
-Regular([], 2.22773ms)
-Regular([], 2.214646ms)
-Regular([], 2.202474ms)
-Regular([], 2.20643ms)
-Regular([], 2.176514ms)
-Regular([], 2.204988ms)
-Regular([], 2.200099ms)
-Regular([], 2.202513ms)
-Regular([], 2.208314ms)
-Regular([], 2.729765ms)
-Regular([], 2.280901ms)
-Regular([], 2.208985ms)
-Regular([], 2.223904ms)
-Regular([], 2.244111ms)
-Regular([], 2.239372ms)
-Regular([], 2.22709ms)
-Regular([], 2.206992ms)
-Regular([], 2.197594ms)
-Regular([], 2.20102ms)
-Regular([], 2.241326ms)
-Regular([], 2.230586ms)
-Regular([], 2.189449ms)
-Regular([], 2.224334ms)
-Regular([], 2.228773ms)
-Regular([], 2.261724ms)
-Regular([], 2.274619ms)
-Regular([], 2.260943ms)
-Regular([], 2.239463ms)
-Regular([], 2.222911ms)
-Regular([], 2.251947ms)
-Regular([], 2.236527ms)
-Regular([], 2.203014ms)
-Regular([LControl], 2.505142ms)
-Regular([LControl], 2.220397ms)
-Regular([LControl], 2.214315ms)
-Regular([LControl], 2.220618ms)
-Regular([LControl], 2.207783ms)
-Regular([LControl], 2.219906ms)
-Regular([LControl], 2.967031ms)
-Regular([LControl], 2.387461ms)
-Regular([LControl], 2.288515ms)
-Regular([LControl], 2.228101ms)
-Regular([LControl], 2.251916ms)
-Regular([LControl], 2.234684ms)
-Regular([LControl], 2.234975ms)
-Regular([LControl], 2.202032ms)
-Regular([LControl], 2.208675ms)
-Regular([LControl], 2.230606ms)
-Regular([LControl], 2.262996ms)
-Regular([LControl], 2.22168ms)
-Regular([LControl], 2.202543ms)
-Regular([LControl], 2.197554ms)
-Regular([LControl], 4.602588ms)
-Regular([LControl], 2.316457ms)
-Regular([LControl], 2.258809ms)
-Regular([LControl], 2.273357ms)
-Regular([LControl], 2.220607ms)
-Regular([LControl], 2.229214ms)
-Regular([LControl], 2.234232ms)
-Regular([LControl], 2.219566ms)
-Regular([LControl], 2.202673ms)
-Regular([LControl], 2.217251ms)
-Regular([LControl], 2.219305ms)
-Regular([LControl], 2.203936ms)
-Regular([LControl], 2.201271ms)
-Regular([LControl], 2.214626ms)
-Regular([LControl], 3.404704ms)
-Regular([LControl], 2.30182ms)
-Regular([LControl], 2.243831ms)
-Regular([LControl], 2.23777ms)
-Regular([LControl], 2.228041ms)
-Regular([LControl], 2.250373ms)

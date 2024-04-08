@@ -1,0 +1,32 @@
+Pair(["LControl", "X"], ["LControl", "S"]): 1
+Pair(["Down"], ["Right"]): 1
+Pair(["W", "LControl"], ["Q", "LControl"]): 1
+Pair(["LControl", "A", "S"], ["LControl", "D"]): 1
+Pair(["Down"], ["LControl"]): 1
+Pair(["LControl", "A", "S"], ["LControl", "A"]): 2
+Pair(["Q", "LControl"], ["W", "LControl"]): 1
+Pair(["LControl", "A"], ["LControl", "S"]): 4
+Pair(["LControl", "S"], ["LControl", "A"]): 1
+Pair(["Right"], ["Up"]): 1
+Pair(["LControl", "Z"], ["LControl", "X"]): 1
+Pair(["Up"], ["Down"]): 1
+Pair(["LControl"], ["R", "LControl"]): 1
+Pair(["LControl", "S"], ["LControl"]): 3
+Pair([], ["Up"]): 1
+Pair(["LControl", "A", "S"], ["LControl", "Z"]): 1
+Pair(["LControl", "D"], ["LControl"]): 1
+Pair(["LControl", "S"], ["W", "LControl"]): 1
+Pair(["W", "LControl"], ["W", "LControl"]): 2
+Pair(["Up"], ["F"]): 1
+Pair(["W", "LControl"], ["E", "LControl"]): 1
+Pair(["LControl"], ["LControl", "A"]): 2
+Pair(["LControl", "S"], ["LControl", "S"]): 2
+Pair(["LControl", "S"], ["LControl", "A", "S"]): 2
+Pair(["LControl", "A"], ["LControl", "A", "S"]): 2
+Pair(["F"], ["Down"]): 1
+Pair(["LControl", "D"], ["E", "LControl"]): 1
+Pair(["LControl"], ["E", "LControl"]): 1
+Pair(["E", "LControl"], ["LControl", "A"]): 1
+Pair(["R", "LControl"], ["LControl", "D"]): 1
+Pair(["LControl"], ["LControl", "C"]): 1
+Pair(["E", "LControl"], ["LControl", "S"]): 2

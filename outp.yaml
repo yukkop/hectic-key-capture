@@ -1,0 +1,17 @@
+Pair(["L"], ["K", "L"]): 1
+Pair(["F"], ["F", "J"]): 1
+Pair(["LControl"], ["LControl", "C"]): 1
+Pair([], ["D"]): 1
+Pair([], ["L"]): 2
+Single([]): 1
+Pair(["D"], ["J"]): 1
+Pair(["F"], ["F", "L"]): 1
+Pair(["F", "L"], ["S", "F", "L"]): 1
+Pair(["K"], ["D", "K"]): 1
+Pair(["S"], ["S", "K"]): 1
+Pair([], ["F"]): 4
+Pair([], ["J"]): 4
+Pair([], ["D", "K"]): 1
+Pair([], ["S"]): 1
+Pair(["S"], ["A", "S"]): 1
+Pair([], ["LControl"]): 1

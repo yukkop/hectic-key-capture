@@ -53,6 +53,8 @@ const VERBOSE_LONG: &str = "--verbose";
 const OUTPUT_SHORT: &str = "-o";
 const OUTPUT_LONG: &str = "--output";
 
+const NO_OUTPUT_LONG: &str = "--no-output";
+
 const MODIFY_OUTPUT_SHORT: &str = "-y";
 const MODIFY_OUTPUT_LONG: &str = "--modify-output";
 
@@ -186,8 +188,6 @@ fn parse_input_from_string(s: &str) -> Result<Vec<Keycode>, String> {
         .collect::<Result<Vec<Keycode>, String>>()?;
 
     Ok(keycodes)
-
-    //Err("Unrecognized Input format".to_string())
 }
 
 fn parse_count_item(s: &str) -> Result<CountItem, String> {
@@ -282,6 +282,7 @@ fn main() {
     let mut sensitivity = PRODUCTIVE_SENSITIVITY_VALUE;
     let mut force_modify_output = false;
     let mut force_modify_trace = false;
+    let mut no_output = false;
     let mut verbose = false;
     let mut no_chords = false;
     let mut statistic_path: Option<PathBuf> = None;
@@ -370,6 +371,7 @@ fn main() {
                 trace_path = Some(path.to_path_buf());
             }
             NO_CHORDS_LONG => no_chords = true,
+            NO_OUTPUT_LONG => no_output = true,
             PLAIN_SHORT | PLAIN_LONG => trace_plain_style = true,
             VERBOSE_SHORT | VERBOSE_LONG => verbose = true,
             HELP_SHORT | "-?" | "?" | "h" | HELP_LONG | "-help" | "help" => {
@@ -407,6 +409,10 @@ fn main() {
                     Output file
 
                     {default} {DEFAULT_STATISTIC_PATH_YAML}
+
+    {no_output_long}
+                    Does not create an output file.
+                    Do no effect on trace file ({trace_short}, {trace_long})
 
     {trace_short}, {trace_long} {trace_value}
                     Save trace (Key, Duratin) in file
@@ -457,6 +463,7 @@ fn main() {
                     modify_trace_long = MODIFY_TRACE_LONG.cyan(),
                     plain_short = PLAIN_SHORT.cyan(),
                     plain_long = PLAIN_LONG.cyan(),
+                    no_output_long = NO_OUTPUT_LONG.cyan(),
                 );
 
                 std::process::exit(0);
@@ -473,7 +480,7 @@ fn main() {
             "{warning} {PLAIN_SHORT} {or} {PLAIN_LONG} {text}{TRACE_SHORT} {pipe} {TRACE_LONG}{brace}",
             warning = "warning!:".yellow(),
             or = "or".yellow(),
-            text = "ignored becouse you do not specify trace option (".yellow(),
+            text = "ignored becouse you do not specified trace option (".yellow(),
             pipe = "|".yellow(),
             brace = ")".yellow(),
         );
@@ -484,83 +491,78 @@ fn main() {
             "{warning} {MODIFY_TRACE_SHORT} {or} {MODIFY_TRACE_LONG} {text}{TRACE_SHORT} {pipe} {TRACE_LONG}{brace}",
             warning = "warning!:".yellow(),
             or = "or".yellow(),
-            text = "ignored becouse you do not specify trace option (".yellow(),
+            text = "ignored becouse you do not specified trace option (".yellow(),
             pipe = "|".yellow(),
             brace = ")".yellow(),
         );
     }
 
-    // process the output file
-    fn ask_modify(force: bool, path: &PathBuf) {
-        if !force {
-            println!(
-                "{} ({:?}) {}",
-                "warning!: file that you provide like output".yellow(),
-                path,
-                "already exist".yellow(),
-            );
-            print!("are you sure you want to modify this file? [y/N] ");
-            io::stdout().flush().unwrap();
+    if force_modify_output && no_output {
+        println!(
+            "{warning} {MODIFY_OUTPUT_SHORT} {or} {MODIFY_OUTPUT_LONG} {text}{NO_OUTPUT_LONG}{brace}",
+            warning = "warning!:".yellow(),
+            or = "or".yellow(),
+            text = "ignored becouse you do specified no_output option (".yellow(),
+            brace = ")".yellow(),
+        );
+    }
 
-            let mut buffer = [0; 1];
-            io::stdin()
-                .read_exact(&mut buffer)
+    if statistic_path.is_some() && no_output {
+        println!(
+            "{warning} {OUTPUT_SHORT} {or} {OUTPUT_LONG} {text}{NO_OUTPUT_LONG}{brace}",
+            warning = "warning!:".yellow(),
+            or = "or".yellow(),
+            text = "ignored becouse you do specified no_output option (".yellow(),
+            brace = ")".yellow(),
+        );
+    }
+
+    // process the output file
+    if !no_output {
+        if statistic_path == None {
+            statistic_path = Some(Path::new(DEFAULT_STATISTIC_PATH_YAML).to_path_buf());
+        }
+        let path = statistic_path.as_ref().unwrap();
+
+        if path.exists() {
+            let mut file = File::open(&path)
                 .or_else(|_| -> Result<_, ()> {
-                    println!("{}", "cannot read terminal input".red());
+                    println!(
+                        "{} {} {}",
+                        "file in".red(),
+                        path.to_string(),
+                        "exists but cannot be open".red()
+                    );
                     std::process::exit(1);
                 })
                 .unwrap();
-            let character = buffer[0] as char;
+            let mut contents = String::new();
+            file.read_to_string(&mut contents)
+                .or_else(|_| -> Result<_, ()> {
+                    println!(
+                        "{} {} {}",
+                        "file in".red(),
+                        path.to_string(),
+                        "exists but cannot be read".red()
+                    );
+                    std::process::exit(1);
+                })
+                .unwrap();
 
-            match character {
-                'y' | 'Y' => {}
-                _ => std::process::exit(0),
-            }
+            key_counts = serde_yaml::from_str(&contents)
+                .or_else(|_| -> Result<_, ()> {
+                    println!(
+                        "{} {} {}",
+                        "error: data in output file".red(),
+                        path.to_string(),
+                        "not valid and cannot be deserialize".red()
+                    );
+                    std::process::exit(1);
+                })
+                .unwrap();
+
+            ask_modify(force_modify_output, path);
         }
-    }
-    if statistic_path == None {
-        statistic_path = Some(Path::new(DEFAULT_STATISTIC_PATH_YAML).to_path_buf());
-    }
-    let path = statistic_path.as_ref().unwrap();
-
-    if path.exists() {
-        let mut file = File::open(&path)
-            .or_else(|_| -> Result<_, ()> {
-                println!(
-                    "{} {} {}",
-                    "file in".red(),
-                    path.to_string(),
-                    "exists but cannot be open".red()
-                );
-                std::process::exit(1);
-            })
-            .unwrap();
-        let mut contents = String::new();
-        file.read_to_string(&mut contents)
-            .or_else(|_| -> Result<_, ()> {
-                println!(
-                    "{} {} {}",
-                    "file in".red(),
-                    path.to_string(),
-                    "exists but cannot be read".red()
-                );
-                std::process::exit(1);
-            })
-            .unwrap();
-
-        key_counts = serde_yaml::from_str(&contents)
-            .or_else(|_| -> Result<_, ()> {
-                println!(
-                    "{} {} {}",
-                    "error: data in output file".red(),
-                    path.to_string(),
-                    "not valid and cannot be deserialize".red()
-                );
-                std::process::exit(1);
-            })
-            .unwrap();
-
-        ask_modify(force_modify_output, path);
     }
 
     if let Some(ref mut config) = key_counts.config {
@@ -576,7 +578,7 @@ fn main() {
     }
 
     // save first time to check open/write errors
-    save_data(&key_counts, statistic_path.as_ref().unwrap());
+    save_data(&key_counts, statistic_path.as_ref().unwrap(), no_output);
     if let Some(ref trace_path) = trace_path {
         if trace_path.exists() {
             ask_modify(force_modify_trace, trace_path);
@@ -621,7 +623,7 @@ fn main() {
                             );
 
                             // Is this expensive?)
-                            save_data(&key_counts, statistic_path.as_ref().unwrap());
+                            save_data(&key_counts, statistic_path.as_ref().unwrap(), no_output);
                         }
 
                         last_pair = vec![*key];
@@ -636,7 +638,7 @@ fn main() {
                         );
 
                         // Is this expensive?)
-                        save_data(&key_counts, statistic_path.as_ref().unwrap());
+                        save_data(&key_counts, statistic_path.as_ref().unwrap(), no_output);
                     }
 
                     if let Some(ref trace_path) = trace_path {
@@ -671,7 +673,7 @@ fn main() {
                         );
 
                         // Is this expensive?)
-                        save_data(&key_counts, statistic_path.as_ref().unwrap());
+                        save_data(&key_counts, statistic_path.as_ref().unwrap(), no_output);
                     }
 
                     last_pair = keys.clone();
@@ -686,7 +688,7 @@ fn main() {
                     );
 
                     // Is this expensive?)
-                    save_data(&key_counts, statistic_path.as_ref().unwrap());
+                    save_data(&key_counts, statistic_path.as_ref().unwrap(), no_output);
                 }
 
                 if let Some(ref trace_path) = trace_path {
@@ -731,7 +733,10 @@ fn main() {
     }
 }
 
-fn save_data(data: &KeyCounts, path: &PathBuf) {
+fn save_data(data: &KeyCounts, path: &PathBuf, no_output: bool) {
+    if no_output {
+        return;
+    }
     let serialized = serde_yaml::to_string(data).expect("serialize to yaml panic");
     let mut file = File::create(path)
         .or_else(|_| -> Result<_, ()> {
@@ -853,5 +858,33 @@ fn check_config(
             }
         }
         config.version = VERSION.into();
+    }
+}
+
+fn ask_modify(force: bool, path: &PathBuf) {
+    if !force {
+        println!(
+            "{} ({:?}) {}",
+            "warning!: file that you provide like output".yellow(),
+            path,
+            "already exist".yellow(),
+        );
+        print!("are you sure you want to modify this file? [y/N] ");
+        io::stdout().flush().unwrap();
+
+        let mut buffer = [0; 1];
+        io::stdin()
+            .read_exact(&mut buffer)
+            .or_else(|_| -> Result<_, ()> {
+                println!("{}", "cannot read terminal input".red());
+                std::process::exit(1);
+            })
+            .unwrap();
+        let character = buffer[0] as char;
+
+        match character {
+            'y' | 'Y' => {}
+            _ => std::process::exit(0),
+        }
     }
 }

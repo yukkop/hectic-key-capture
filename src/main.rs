@@ -231,6 +231,10 @@ fn main() {
 
                     {default} {DEFAULT_STATISTIC_PATH_YAML}
 
+    {trace_short}, {trace_long} {trace_value}
+                    Save trace (Key, Duratin) in file
+                    where Duration is time between curent and last key pressed
+
     {version_short}, {version_long}         
                     Show the version
 
@@ -260,6 +264,9 @@ fn main() {
                     output_long = OUTPUT_LONG.cyan(),
                     output_value = "<path>".cyan(),
                     default = "Default:".green(),
+                  trace_short = TRACE_SHORT.cyan(),
+                  trace_long =  TRACE_LONG.cyan(),
+                  trace_value =  "<path>".cyan(),
                 );
 
                 std::process::exit(0);

@@ -10,13 +10,13 @@ use crossterm::{
 use device_query::{DeviceQuery, DeviceState, Keycode};
 use serde::ser::SerializeMap;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
-use std::fs::File;
+use std::fs::{File, OpenOptions};
 use std::hash::BuildHasherDefault;
 use std::io::{self, stdout, Read, Write};
 use std::ops::{Deref, DerefMut};
 use std::path::{Path, PathBuf};
 use std::str::FromStr;
-use std::time::Duration;
+use std::time::{Duration, Instant};
 use std::{env, thread};
 
 /// A [`HashMap`][hashbrown::HashMap] implementing aHash, a high
@@ -54,6 +54,9 @@ const OUTPUT_LONG: &str = "--output";
 const MODIFY_OUTPUT_SHORT: &str = "-y";
 const MODIFY_OUTPUT_LONG: &str = "--modify-output";
 
+const TRACE_SHORT: &str = "-t";
+const TRACE_LONG: &str = "--trace";
+
 //const FORMAT_SHORT: &str = "-f";
 //const FORMAT_LONG: &str = "--format";
 
@@ -66,6 +69,12 @@ macro_rules! verbose {
             println!("\r{}", format!($($arg)*));
         }
     };
+}
+
+#[derive(Debug)]
+pub enum TraceStep {
+    First(Keycode),
+    Regular(Keycode, Duration),
 }
 
 #[derive(Debug)]
@@ -143,6 +152,8 @@ fn main() {
     let mut force_modify_output = false;
     let mut verbose = false;
     let mut statistic_path: Option<PathBuf> = None;
+    let mut trace_path: Option<PathBuf> = None;
+    let mut first_trace_step = true;
 
     let mut args = env::args();
     let program_name = args.next().expect("this panic not posible");
@@ -179,6 +190,13 @@ fn main() {
                     .expect(format!("provide value to {} (output)", arg).as_str());
                 let path = Path::new(&path);
                 statistic_path = Some(path.to_path_buf());
+            }
+            TRACE_SHORT | TRACE_LONG => {
+                let path = args
+                    .next()
+                    .expect(format!("provide value to {} (trance)", arg).as_str());
+                let path = Path::new(&path);
+                trace_path = Some(path.to_path_buf());
             }
             VERBOSE_SHORT | VERBOSE_LONG => verbose = true,
             HELP_SHORT | "-?" | "?" | "h" | HELP_LONG | "-help" | "help" => {
@@ -299,6 +317,9 @@ fn main() {
         execute!(stdout, EnterAlternateScreen).expect("EnterAlternateScreen problem");
     }
 
+    let start = Instant::now();
+    let mut last_duration = start.elapsed();
+
     loop {
         let keys = device_state.get_keys();
 
@@ -315,6 +336,20 @@ fn main() {
 
                 // Is this expensive?)
                 save_data(&key_counts, statistic_path.as_ref().unwrap());
+
+                if let Some(ref trace_path) = trace_path {
+                    let duration = start.elapsed();
+                    let step = if first_trace_step {
+                        first_trace_step = false;
+                        TraceStep::First(*key)
+                    } else {
+                        TraceStep::Regular(*key, duration - last_duration)
+                    };
+
+                    last_duration = duration;
+
+                    upend_trace(step, &trace_path);
+                }
             }
         }
 
@@ -345,7 +380,19 @@ fn main() {
 
 fn save_data(data: &KeyCounts, path: &PathBuf) {
     let serialized = serde_yaml::to_string(data).expect("serialize to yaml panic");
-    let mut file = File::create(path).expect("create file panic");
+    let mut file =
+        File::create(path).expect(format!("cannot create / open file {:?}", path).as_str());
     file.write_all(serialized.as_bytes())
-        .expect("cannot write to file");
+        .expect(format!("cannot write to file {:?}", path).as_str());
+}
+
+fn upend_trace(trace_step: TraceStep, path: &PathBuf) {
+    let mut file = OpenOptions::new()
+        .create(true)
+        .append(true)
+        .open(path)
+        .expect(format!("cannot create / open file {:?}", path).as_str());
+  
+    writeln!(file, "\r{:?}", trace_step)
+        .expect(format!("cannot write to file {:?}", path).as_str());
 }

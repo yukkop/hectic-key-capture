@@ -7,7 +7,7 @@ use crossterm::{
 };
 use device_query::{DeviceQuery, DeviceState, Keycode};
 use std::collections::HashMap;
-use std::env;
+use std::{env, thread};
 use std::io::stdout;
 use std::time::Duration;
 
@@ -117,7 +117,7 @@ fn main() {
     let mut key_counts: HashMap<Keycode, u32> = HashMap::new();
     let mut last_keys = Vec::new();
 
-        let mut stdout = stdout();
+    let mut stdout = stdout();
 
     if verbose {
         enable_raw_mode().expect("enable_raw_mode problem");
@@ -154,6 +154,8 @@ fn main() {
                 }
                 _ => {}
             }
+        } else {
+            thread::sleep(Duration::from_millis(sensitivity));
         }
     }
 

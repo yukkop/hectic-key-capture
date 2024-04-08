@@ -56,6 +56,9 @@ const OUTPUT_LONG: &str = "--output";
 const MODIFY_OUTPUT_SHORT: &str = "-y";
 const MODIFY_OUTPUT_LONG: &str = "--modify-output";
 
+const MODIFY_TRACE_SHORT: &str = "-Y";
+const MODIFY_TRACE_LONG: &str = "--modify-trace";
+
 const TRACE_SHORT: &str = "-t";
 const TRACE_LONG: &str = "--trace";
 
@@ -256,6 +259,7 @@ fn main() {
 
     let mut sensitivity = PRODUCTIVE_SENSITIVITY_VALUE;
     let mut force_modify_output = false;
+    let mut force_modify_trace = false;
     let mut verbose = false;
     let mut no_chords = false;
     let mut statistic_path: Option<PathBuf> = None;
@@ -301,6 +305,9 @@ fn main() {
                     .expect(format!("provide value to {} (output)", arg).as_str());
                 let path = Path::new(&path);
                 statistic_path = Some(path.to_path_buf());
+            }
+            MODIFY_TRACE_SHORT | MODIFY_TRACE_LONG => {
+                force_modify_trace = true;
             }
             TRACE_SHORT | TRACE_LONG => {
                 let path = args
@@ -354,6 +361,9 @@ fn main() {
                     Save trace (Key, Duratin) in file
                     where Duration is time between curent and last key pressed
 
+    {modify_trace_short}, {modify_trace_long}
+                    Force modify trace file if it already exists
+
     {version_short}, {version_long}         
                     Show the version
 
@@ -389,6 +399,8 @@ fn main() {
                     pairs_short = PAIRS_SHORT.cyan(),
                     pairs_long = PAIRS_LONG.cyan(),
                     no_chords_long = NO_CHORDS_LONG.cyan(),
+                  modify_trace_short =  MODIFY_TRACE_SHORT.cyan(),
+                  modify_trace_long  =  MODIFY_TRACE_LONG .cyan(),
                 );
 
                 std::process::exit(0);
@@ -423,9 +435,10 @@ fn main() {
 
         if !force_modify_output {
             println!(
-                "{}: file that you provide like output ({:?}) already exist",
-                "warning!".yellow(),
-                path
+                "{} ({:?}) {}",
+                "warning!: file that you provide like output".yellow(),
+                path,
+                "already exist".yellow(),
             );
             print!("would you like modify this file? [y/N] ");
             io::stdout().flush().unwrap();
@@ -452,6 +465,29 @@ fn main() {
     // save first time to check open/write errors
     save_data(&key_counts, statistic_path.as_ref().unwrap());
     if let Some(ref trace_path) = trace_path {
+        if trace_path.exists() {
+            if !force_modify_trace {
+                println!(
+                    "{} ({:?}) {}",
+                    "warning!: file that you provide like output".yellow(),
+                    trace_path,
+                    "already exist".yellow(),
+                );
+                print!("would you like modify this file? [y/N] ");
+                io::stdout().flush().unwrap();
+
+                let mut buffer = [0; 1];
+                io::stdin()
+                    .read_exact(&mut buffer)
+                    .expect("cannot read terminal input");
+                let character = buffer[0] as char;
+
+                match character {
+                    'y' | 'Y' => {}
+                    _ => std::process::exit(0),
+                }
+            }
+        }
         upend_trace(TraceStep::Empty, &trace_path);
     }
 
@@ -509,6 +545,20 @@ fn main() {
                         // Is this expensive?)
                         save_data(&key_counts, statistic_path.as_ref().unwrap());
                     }
+
+                    if let Some(ref trace_path) = trace_path {
+                        let duration = start.elapsed();
+                        let step = if first_trace_step {
+                            first_trace_step = false;
+                            TraceStep::First(vec![*key])
+                        } else {
+                            TraceStep::Regular(vec![*key], duration - last_duration)
+                        };
+
+                        last_duration = duration;
+
+                        upend_trace(step, &trace_path);
+                    }
                 }
             }
         }
@@ -545,20 +595,20 @@ fn main() {
                     // Is this expensive?)
                     save_data(&key_counts, statistic_path.as_ref().unwrap());
                 }
-            }
 
-            if let Some(ref trace_path) = trace_path {
-                let duration = start.elapsed();
-                let step = if first_trace_step {
-                    first_trace_step = false;
-                    TraceStep::First(keys.clone())
-                } else {
-                    TraceStep::Regular(keys.clone(), duration - last_duration)
-                };
+                if let Some(ref trace_path) = trace_path {
+                    let duration = start.elapsed();
+                    let step = if first_trace_step {
+                        first_trace_step = false;
+                        TraceStep::First(keys.clone())
+                    } else {
+                        TraceStep::Regular(keys.clone(), duration - last_duration)
+                    };
 
-                last_duration = duration;
+                    last_duration = duration;
 
-                upend_trace(step, &trace_path);
+                    upend_trace(step, &trace_path);
+                }
             }
             some = false;
         }

@@ -414,3 +414,96 @@
 Regular([F], 116.098013ms)
 Regular([LControl], 857.069118ms)
 Regular([LControl, C], 116.988441ms)
+Init("2024-04-08T18:45:18.644912855+02:00")
+First([Down])
+Regular([Up], 162.691354ms)
+Regular([F], 141.261143ms)
+Regular([F, Down], 42.141746ms)
+Regular([D, Down], 122.123244ms)
+Regular([S, D, Down], 140.679123ms)
+Regular([S, D, Right, Down], 26.70578ms)
+Regular([Up, Right], 209.737886ms)
+Regular([F, Up], 94.604691ms)
+Regular([F, Down], 49.175498ms)
+Regular([D, F, Down], 188.459659ms)
+Regular([D, F, Up, Right], 2.897256ms)
+Regular([S, D, Up, Right], 69.953568ms)
+Regular([S, D, Down], 42.232076ms)
+Regular([S, Up], 141.771168ms)
+Regular([F, Up], 63.48239ms)
+Regular([F, Up, Down], 23.478767ms)
+Regular([D, F, Down], 122.98602ms)
+Regular([D, F, Up], 2.749759ms)
+Regular([D, F, Up, Right], 7.108442ms)
+Regular([D, F, Down], 62.636115ms)
+Regular([S, D, F, Down], 30.11765ms)
+Regular([LControl], 370.545241ms)
+Regular([LControl, C], 110.612348ms)
+Init("2024-04-08T18:48:34.371743150+02:00")
+First([J])
+Regular([J], 621.893247ms)
+Regular([J], 133.69758ms)
+Regular([J], 197.753944ms)
+Regular([K], 199.949894ms)
+Regular([D], 240.462425ms)
+Regular([D, J], 9.223102ms)
+Regular([F, J], 63.913536ms)
+Regular([F, K], 118.756708ms)
+Regular([S], 173.084275ms)
+Regular([S, L], 34.067909ms)
+Regular([K], 194.285233ms)
+Regular([A, K], 24.860608ms)
+Regular([A, J], 189.041449ms)
+Regular([F, J], 24.765249ms)
+Regular([F, K], 259.264624ms)
+Regular([F, J], 55.888328ms)
+Regular([L], 177.058592ms)
+Regular([A, L], 22.95414ms)
+Regular([D], 246.483514ms)
+Regular([J], 255.444516ms)
+Regular([F, J], 24.122005ms)
+Regular([F, J, K], 401.441µs)
+Regular([D, F, J, K], 89.988678ms)
+Regular([J], 214.416109ms)
+Regular([F, J], 29.331676ms)
+Regular([F, J, K], 569.976µs)
+Regular([D, F, J, K], 74.9221ms)
+Regular([C, Comma], 258.105506ms)
+Regular([LControl], 429.948599ms)
+Regular([LControl, C], 108.822556ms)
+Init("2024-04-08T18:50:57.605967849+02:00")
+First([Down])
+Regular([Up], 204.408644ms)
+Regular([Down], 216.759512ms)
+Regular([F, Down], 98.83706ms)
+Regular([Up], 111.178119ms)
+Regular([Down], 117.54675ms)
+Regular([Up], 141.112068ms)
+Regular([Down], 210.310081ms)
+Regular([Up, Down], 40.582992ms)
+Regular([LControl], 199.68897ms)
+Init("2024-04-08T18:51:11.169050418+02:00")
+First([J])
+Regular([K], 163.559317ms)
+Regular([F, K], 21.201655ms)
+Regular([F, J], 95.102951ms)
+Regular([D, J], 49.110003ms)
+Regular([S, D, J], 51.647673ms)
+Regular([S, D, K], 1.485411ms)
+Regular([S, D, K, L], 18.53307ms)
+Regular([S, J], 66.153855ms)
+Regular([J], 425.713132ms)
+Regular([J], 147.59771ms)
+Regular([J], 142.669306ms)
+Regular([J], 164.504666ms)
+Regular([K], 166.347517ms)
+Regular([F], 159.03046ms)
+Regular([F, J], 30.09959ms)
+Regular([D, J], 98.881735ms)
+Regular([D, K], 52.407796ms)
+Regular([L], 322.603343ms)
+Regular([K], 356.082559ms)
+Regular([C], 301.442024ms)
+Regular([X], 341.322662ms)
+Regular([LControl], 1.339147606s)
+Regular([LControl, C], 75.983515ms)

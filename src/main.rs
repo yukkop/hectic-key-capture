@@ -115,9 +115,9 @@ fn input_to_string(input: Input) -> String {
     match input {
         Input::Chord(keys) => {
             let keys_str: Vec<String> = keys.iter().map(keycode_to_string).collect();
-            format!("Chord({:?})", keys_str.join("+")).replace("\"", "")
+            format!("{:?}", keys_str.join("+")).replace("\"", "")
         }
-        Input::Single(key) => format!("Single({:?})", keycode_to_string(&key)).replace("\"", ""),
+        Input::Single(key) => format!("{:?}", keycode_to_string(&key)).replace("\"", ""),
     }
 }
 
@@ -178,25 +178,25 @@ fn parse_keycode_from_string(s: &str) -> Result<Keycode, String> {
 }
 
 fn parse_input_from_string(s: &str) -> Result<Input, String> {
-    if s.starts_with("Single") {
-        Ok(Input::Single(parse_keycode_from_string(unwrap_braces(s)?)?))
-    } else if s.starts_with("Chord") {
-        let keycodes_str = unwrap_braces(s)?;
-        let keycodes = keycodes_str
-            .split('+')
-            .filter_map(|s| {
-                let trimmed = s.trim();
-                if trimmed.is_empty() {
-                    None
-                } else {
-                    Some(parse_keycode_from_string(trimmed))
-                }
-            })
-            .collect::<Result<Vec<Keycode>, String>>()?;
-        Ok(Input::Chord(keycodes))
+    let keycodes = s
+        .split('+')
+        .filter_map(|s| {
+            let trimmed = s.trim();
+            if trimmed.is_empty() {
+                None
+            } else {
+                Some(parse_keycode_from_string(trimmed))
+            }
+        })
+        .collect::<Result<Vec<Keycode>, String>>()?;
+
+    if keycodes.len() == 1 {
+        Ok(Input::Single(keycodes[0]))
     } else {
-        Err("Unrecognized Input format".to_string())
+        Ok(Input::Chord(keycodes))
     }
+
+    //Err("Unrecognized Input format".to_string())
 }
 
 fn parse_count_item(s: &str) -> Result<CountItem, String> {

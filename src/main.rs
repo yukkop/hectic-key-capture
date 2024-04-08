@@ -1,4 +1,6 @@
+use ahash::AHasher;
 use colored::*;
+use core::fmt;
 use crossterm::event::{poll, KeyModifiers};
 use crossterm::{
     event::{read, Event, KeyCode},
@@ -6,10 +8,26 @@ use crossterm::{
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
 use device_query::{DeviceQuery, DeviceState, Keycode};
-use std::collections::HashMap;
-use std::{env, thread};
-use std::io::stdout;
+use serde::ser::SerializeMap;
+use serde::{Deserialize, Deserializer, Serialize, Serializer};
+use std::fs::File;
+use std::hash::BuildHasherDefault;
+use std::io::{self, stdout, Read, Write};
+use std::ops::{Deref, DerefMut};
+use std::path::{Path, PathBuf};
+use std::str::FromStr;
 use std::time::Duration;
+use std::{env, thread};
+
+/// A [`HashMap`][hashbrown::HashMap] implementing aHash, a high
+/// speed keyed hashing algorithm intended for use in in-memory hashmaps.
+///
+/// aHash is designed for performance and is NOT cryptographically secure.
+///
+/// Within the same execution of the program iteration order of different
+/// `HashMap`s only depends on the order of insertions and deletions,
+/// but it will not be stable between multiple executions of the program.
+pub type HashMap<K, V> = hashbrown::HashMap<K, V, BuildHasherDefault<AHasher>>;
 
 const PRODUCTIVE_SENSITIVITY_KEY: &str = "productive";
 const PRODUCTIVE_SENSITIVITY_VALUE: u64 = 100;
@@ -30,6 +48,18 @@ const VERSION_LONG: &str = "--version";
 const VERBOSE_SHORT: &str = "-v";
 const VERBOSE_LONG: &str = "--verbose";
 
+const OUTPUT_SHORT: &str = "-o";
+const OUTPUT_LONG: &str = "--output";
+
+const MODIFY_OUTPUT_SHORT: &str = "-y";
+const MODIFY_OUTPUT_LONG: &str = "--modify-output";
+
+//const FORMAT_SHORT: &str = "-f";
+//const FORMAT_LONG: &str = "--format";
+
+const DEFAULT_STATISTIC_PATH_YAML: &str = "key-capture-statistic.yaml";
+//const DEFAULT_STATISTIC_PATH_JSON: &str = "key-capture-statistic.json";
+
 macro_rules! verbose {
     ($verbose:expr, $($arg:tt)*) => {
         if $verbose {
@@ -37,16 +67,94 @@ macro_rules! verbose {
         }
     };
 }
+
+#[derive(Debug)]
+pub struct KeyCounts(pub HashMap<Keycode, u32>);
+
+// Custom Serialize implementation for KeyCounts
+impl Serialize for KeyCounts {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let mut map = serializer.serialize_map(Some(self.0.len()))?;
+        for (key, value) in &self.0 {
+            // Convert each key to a string using its Debug representation
+            map.serialize_entry(&format!("{:?}", key), value)?;
+        }
+        map.end()
+    }
+}
+
+// Custom Deserialize implementation for KeyCounts
+impl<'de> Deserialize<'de> for KeyCounts {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        use serde::de::{self, MapAccess, Visitor};
+
+        struct KeyCountsVisitor;
+
+        impl<'de> Visitor<'de> for KeyCountsVisitor {
+            type Value = KeyCounts;
+
+            fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+                formatter.write_str("a map of Keycode to u32")
+            }
+
+            fn visit_map<V>(self, mut map: V) -> Result<KeyCounts, V::Error>
+            where
+                V: MapAccess<'de>,
+            {
+                let mut counts = HashMap::new();
+                while let Some((key, value)) = map.next_entry::<String, u32>()? {
+                    // Attempt to parse Keycode from the string
+                    // This requires your Keycode type to implement FromStr or similar logic to match back to a Keycode
+                    let keycode = Keycode::from_str(&key).map_err(de::Error::custom)?;
+                    counts.insert(keycode, value);
+                }
+                Ok(KeyCounts(counts))
+            }
+        }
+
+        deserializer.deserialize_map(KeyCountsVisitor)
+    }
+}
+
+impl Deref for KeyCounts {
+    type Target = HashMap<Keycode, u32>;
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
+
+impl DerefMut for KeyCounts {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.0
+    }
+}
+
 fn main() {
+    let mut key_counts = KeyCounts(HashMap::new());
+
     let mut sensitivity = PRODUCTIVE_SENSITIVITY_VALUE;
+    let mut force_modify_output = false;
     let mut verbose = false;
+    let mut statistic_path: Option<PathBuf> = None;
+
     let mut args = env::args();
     let program_name = args.next().expect("this panic not posible");
 
     while let Some(arg) = args.next() {
         match arg.as_str() {
             SENSITIVITY_SHORT | SENSITIVITY_LONG => {
-                sensitivity = match args.next().expect("provide value to sensitivity").as_str() {
+                sensitivity = match args
+                    .next()
+                    .expect(format!("provide value to {} (sensitivity)", arg).as_str())
+                    .as_str()
+                {
                     PRODUCTIVE_SENSITIVITY_KEY => PRODUCTIVE_SENSITIVITY_VALUE,
                     INTENT_SENSITIVITY_KEY => INTENT_SENSITIVITY_VALUE,
                     other => other.parse::<u64>().expect(
@@ -61,6 +169,16 @@ fn main() {
             VERSION_SHORT | VERSION_LONG => {
                 println!("{}", VERSION);
             }
+            MODIFY_OUTPUT_SHORT | MODIFY_OUTPUT_LONG => {
+                force_modify_output = true;
+            }
+            OUTPUT_SHORT | OUTPUT_LONG => {
+                let path = args
+                    .next()
+                    .expect(format!("provide value to {} (output)", arg).as_str());
+                let path = Path::new(&path);
+                statistic_path = Some(path.to_path_buf());
+            }
             VERBOSE_SHORT | VERBOSE_LONG => verbose = true,
             HELP_SHORT | "-?" | "?" | "h" | HELP_LONG | "-help" | "help" => {
                 println!(
@@ -73,7 +191,7 @@ fn main() {
                     Interprets how often keyboard input will be taken (milliseconds)
                     for reduce CPU usage
 
-                    100 is a standard value, for a typical keyboard it will be enough
+                    100 - for a typical keyboard it will be enough
                     1 - very sensitive
                     
                     If your keyboard can handle different modes of keystrokes, 
@@ -81,6 +199,16 @@ fn main() {
                     
                     It may be worth checking whether all the keys are picked up by the 
                     program and if some cannot be picked up, reduce this value
+
+                    {default} {PRODUCTIVE_SENSITIVITY_VALUE}
+
+    {modify_output_short}, {modify_output_long}         
+                    Force modify output file if it already exists
+
+    {output_short}, {output_long} {output_value}         
+                    Output file
+
+                    {default} {DEFAULT_STATISTIC_PATH_YAML}
 
     {version_short}, {version_long}         
                     Show the version
@@ -105,6 +233,12 @@ fn main() {
                     version_long = VERSION_LONG.cyan(),
                     verbose_short = VERBOSE_SHORT.cyan(),
                     verbose_long = VERBOSE_LONG.cyan(),
+                    modify_output_short = MODIFY_OUTPUT_SHORT.cyan(),
+                    modify_output_long = MODIFY_OUTPUT_LONG.cyan(),
+                    output_short = OUTPUT_SHORT.cyan(),
+                    output_long = OUTPUT_LONG.cyan(),
+                    output_value = "<path>".cyan(),
+                    default = "Default:".green(),
                 );
 
                 std::process::exit(0);
@@ -113,8 +247,48 @@ fn main() {
         }
     }
 
+    // process the output file
+    if statistic_path == None {
+        statistic_path = Some(Path::new(DEFAULT_STATISTIC_PATH_YAML).to_path_buf());
+    }
+    let path = statistic_path.as_ref().unwrap();
+
+    if path.exists() {
+        let mut file = File::open(&path)
+            .expect(format!("file in {:?} exists but cannot be open", path).as_str());
+        let mut contents = String::new();
+        file.read_to_string(&mut contents)
+            .expect(format!("file in {:?} exists but cannot be read", path).as_str());
+
+        key_counts = serde_yaml::from_str(&contents)
+            .expect("data in output file {:?} not valid and cannot be deserialize");
+
+        println!(
+            "{}: file that you provide like output ({:?}) already exist",
+            "warning!".yellow(),
+            path
+        );
+        print!("would you like modify this file? [y/N] ");
+        io::stdout().flush().unwrap();
+
+        if !force_modify_output {
+            let mut buffer = [0; 1];
+            io::stdin()
+                .read_exact(&mut buffer)
+                .expect("cannot read terminal input");
+            let character = buffer[0] as char;
+
+            match character {
+                'y' | 'Y' => {}
+                _ => std::process::exit(0),
+            }
+        }
+    }
+
+    // save first time to check open/write errors
+    save_data(&key_counts, statistic_path.as_ref().unwrap());
+
     let device_state = DeviceState::new();
-    let mut key_counts: HashMap<Keycode, u32> = HashMap::new();
     let mut last_keys = Vec::new();
 
     let mut stdout = stdout();
@@ -137,6 +311,9 @@ fn main() {
                     key,
                     key_counts[key]
                 );
+
+                // Is this expensive?)
+                save_data(&key_counts, statistic_path.as_ref().unwrap());
             }
         }
 
@@ -163,4 +340,11 @@ fn main() {
         execute!(stdout, LeaveAlternateScreen).expect("LeaveAlternateScreen problem");
         disable_raw_mode().expect("disable_raw_mode problem");
     }
+}
+
+fn save_data(data: &KeyCounts, path: &PathBuf) {
+    let serialized = serde_yaml::to_string(data).expect("serialize to yaml panic");
+    let mut file = File::create(path).expect("create file panic");
+    file.write_all(serialized.as_bytes())
+        .expect("cannot write to file");
 }

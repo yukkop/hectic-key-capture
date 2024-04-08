@@ -279,18 +279,32 @@ fn main() {
             SENSITIVITY_SHORT | SENSITIVITY_LONG => {
                 sensitivity = match args
                     .next()
-                    .expect(format!("provide value to {} (sensitivity)", arg).as_str())
+                    .or_else(|| {
+                        println!(
+                            "{} {arg} {}",
+                            "error: necessary value for option".red(),
+                            "(sensitivity)".red()
+                        );
+                        std::process::exit(1);
+                    })
+                    .unwrap()
                     .as_str()
                 {
                     PRODUCTIVE_SENSITIVITY_KEY => PRODUCTIVE_SENSITIVITY_VALUE,
                     INTENT_SENSITIVITY_KEY => INTENT_SENSITIVITY_VALUE,
-                    other => other.parse::<u64>().expect(
-                        format!(
-                            "value for sensitivity must be a number > 0 or {} or {}",
-                            PRODUCTIVE_SENSITIVITY_KEY, INTENT_SENSITIVITY_KEY
-                        )
-                        .as_str(),
-                    ),
+                    other => other
+                        .parse::<u64>()
+                        .or_else(|_| -> Result<_, ()> {
+                            println!(
+                                "{} {other} {}\n{} number > 0 {or} {PRODUCTIVE_SENSITIVITY_KEY} {or} {INTENT_SENSITIVITY_KEY}",
+                                "error:".red(),
+                                "is not valid value for sensitivity".red(),
+                                "must be a".red(),
+                                or = "or".red(),
+                            );
+                            std::process::exit(1);
+                        })
+                        .unwrap(),
                 }
             }
             VERSION_SHORT | VERSION_LONG => {
@@ -304,7 +318,16 @@ fn main() {
             OUTPUT_SHORT | OUTPUT_LONG => {
                 let path = args
                     .next()
-                    .expect(format!("provide value to {} (output)", arg).as_str());
+                    .or_else(|| {
+                        println!(
+                            "{} {arg} {}",
+                            "error: necessary value for option".red(),
+                            "(output)".red()
+                        );
+                        std::process::exit(1);
+                    })
+                    .unwrap();
+
                 let path = Path::new(&path);
                 statistic_path = Some(path.to_path_buf());
             }
@@ -314,7 +337,16 @@ fn main() {
             TRACE_SHORT | TRACE_LONG => {
                 let path = args
                     .next()
-                    .expect(format!("provide value to {} (trance)", arg).as_str());
+                    .or_else(|| {
+                        println!(
+                            "{} {arg} {}",
+                            "error: necessary value for option".red(),
+                            "(trace)".red()
+                        );
+                        std::process::exit(1);
+                    })
+                    .unwrap();
+
                 let path = Path::new(&path);
                 trace_path = Some(path.to_path_buf());
             }
@@ -440,27 +472,8 @@ fn main() {
     }
 
     // process the output file
-    if statistic_path == None {
-        statistic_path = Some(Path::new(DEFAULT_STATISTIC_PATH_YAML).to_path_buf());
-    }
-    let path = statistic_path.as_ref().unwrap();
-
-    if path.exists() {
-        let mut file = File::open(&path)
-            .expect(format!("file in {:?} exists but cannot be open", path).as_str());
-        let mut contents = String::new();
-        file.read_to_string(&mut contents)
-            .expect(format!("file in {:?} exists but cannot be read", path).as_str());
-
-        key_counts = serde_yaml::from_str(&contents).expect(
-            format!(
-                "data in output file {:?} not valid and cannot be deserialize",
-                path
-            )
-            .as_ref(),
-        );
-
-        if !force_modify_output {
+    fn asl_modify(force: bool, path: &PathBuf) {
+        if !force {
             println!(
                 "{} ({:?}) {}",
                 "warning!: file that you provide like output".yellow(),
@@ -482,6 +495,32 @@ fn main() {
             }
         }
     }
+    if statistic_path == None {
+        statistic_path = Some(Path::new(DEFAULT_STATISTIC_PATH_YAML).to_path_buf());
+    }
+    let path = statistic_path.as_ref().unwrap();
+
+    if path.exists() {
+        let mut file = File::open(&path)
+            .expect(format!("file in {:?} exists but cannot be open", path).as_str());
+        let mut contents = String::new();
+        file.read_to_string(&mut contents)
+            .expect(format!("file in {:?} exists but cannot be read", path).as_str());
+
+        key_counts = serde_yaml::from_str(&contents)
+            .or_else(|_| -> Result<_, ()> {
+                println!(
+                    "{} {} {}",
+                    "error: data in output file".red(),
+                    some_or_empty(path.to_str()),
+                    "not valid and cannot be deserialize".red()
+                );
+                std::process::exit(1);
+            })
+            .unwrap();
+
+        asl_modify(force_modify_output, path);
+    }
 
     if let Some(config) = key_counts.config {
         check_config(config, pairs, no_chords, statistic_path.as_ref().unwrap());
@@ -493,27 +532,7 @@ fn main() {
     save_data(&key_counts, statistic_path.as_ref().unwrap());
     if let Some(ref trace_path) = trace_path {
         if trace_path.exists() {
-            if !force_modify_trace {
-                println!(
-                    "{} ({:?}) {}",
-                    "warning!: file that you provide like output".yellow(),
-                    trace_path,
-                    "already exist".yellow(),
-                );
-                print!("would you like modify this file? [y/N] ");
-                io::stdout().flush().unwrap();
-
-                let mut buffer = [0; 1];
-                io::stdin()
-                    .read_exact(&mut buffer)
-                    .expect("cannot read terminal input");
-                let character = buffer[0] as char;
-
-                match character {
-                    'y' | 'Y' => {}
-                    _ => std::process::exit(0),
-                }
-            }
+            asl_modify(force_modify_trace, trace_path);
         }
         upend_trace(TraceStep::Empty, &trace_path, trace_plain_style);
     }
@@ -731,4 +750,9 @@ fn check_config(config: Config, pairs: bool, no_chords: bool, path: &PathBuf) {
         );
         std::process::exit(1);
     }
+}
+
+fn some_or_empty(option: Option<&str>) ->
+&str {
+  if let Some(str) = option {str} else {"-"}
 }

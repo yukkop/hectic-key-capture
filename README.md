@@ -40,5 +40,5 @@ To run the program with a sensitivity of 100ms and verbose output, saving the st
 cargo run -- -s 50 -v -o my-stats.yaml
 ```
 
-License
+## License
 [LICENSE](LICENSE)

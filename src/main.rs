@@ -86,13 +86,19 @@ pub enum TraceStep {
 
 #[derive(Debug)]
 pub struct KeyCounts {
-    pub config: Config,
+    pub config: Option<Config>,
     pub map: HashMap<CountItem, u32>,
 }
 
 #[derive(Debug, Clone, Copy, Default, Deserialize, Serialize)]
 pub struct Config {
     pub pairs: bool,
+}
+
+impl Config {
+    pub fn new(pairs: bool) -> Self {
+        Self { pairs }
+    }
 }
 
 #[derive(Debug, Eq, PartialEq, Hash, Clone)]
@@ -134,12 +140,12 @@ impl Serialize for KeyCounts {
             let key_str = match key {
                 CountItem::Single(input) => {
                     let input_str: String = input_to_string(input.clone());
-                    format!("Single({})", input_str)
+                    format!("{}", input_str)
                 }
                 CountItem::Pair(input1, input2) => {
                     let input1_str: String = input_to_string(input1.clone());
                     let input2_str: String = input_to_string(input2.clone());
-                    format!("Pair({}, {})", input1_str, input2_str)
+                    format!("{}, {}", input1_str, input2_str)
                 }
             };
             map.serialize_entry(&key_str, value)?;
@@ -147,29 +153,6 @@ impl Serialize for KeyCounts {
 
         map.end()
     }
-}
-
-/// Unwrap firs braces ignoring all text outside
-fn unwrap_braces(s: &str) -> Result<&str, String> {
-    log::trace!("unwrap braces {}", s);
-
-    let (start, closure) = if let Some(pos) = s.find('(') {
-        (pos + 1, ')')
-    } else if let Some(pos) = s.find('[') {
-        (pos + 1, ']')
-    } else {
-        return Err("no ( or [ in str".to_string());
-    };
-
-    let end = match closure {
-        ')' => s.rfind(')').ok_or("no closing ) found")?,
-        ']' => s.rfind(']').ok_or("no closing ] found")?,
-        _ => return Err("unexpected closure character".to_string()),
-    };
-
-    let result = &s[start..end];
-    log::trace!("unwrap braces {}", result);
-    Ok(result)
 }
 
 fn parse_keycode_from_string(s: &str) -> Result<Keycode, String> {
@@ -200,19 +183,17 @@ fn parse_input_from_string(s: &str) -> Result<Input, String> {
 }
 
 fn parse_count_item(s: &str) -> Result<CountItem, String> {
-    if s.starts_with("Single") {
-        let input = parse_input_from_string(unwrap_braces(s)?)?;
-        Ok(CountItem::Single(input))
-    } else if s.starts_with("Pair") {
-        let inputs_str = unwrap_braces(s)?;
-        let inputs = inputs_str
-            .split(", ")
-            .map(parse_input_from_string)
-            .collect::<Result<Vec<Input>, String>>()?;
+    let inputs = s
+        .split(", ")
+        .map(parse_input_from_string)
+        .collect::<Result<Vec<Input>, String>>()?;
 
-        Ok(CountItem::Pair(inputs[0].clone(), inputs[1].clone()))
-    } else {
+    if inputs.len() == 1 {
+        Ok(CountItem::Single(inputs[0].clone()))
+    } else if inputs.len() > 2 {
         Err("Unrecognized CountItem format".to_string())
+    } else {
+        Ok(CountItem::Pair(inputs[0].clone(), inputs[1].clone()))
     }
 }
 
@@ -286,7 +267,7 @@ fn main() {
     env_logger::init();
 
     let mut key_counts = KeyCounts {
-        config: Config::default(),
+        config: None,
         map: HashMap::new(),
     };
 
@@ -470,7 +451,11 @@ fn main() {
         }
     }
 
-    check_config(key_counts.config, pairs, statistic_path.as_ref().unwrap());
+    if let Some(config) = key_counts.config {
+        check_config(config, pairs, statistic_path.as_ref().unwrap());
+    } else {
+        key_counts.config = Some(Config::new(pairs));
+    }
 
     // save first time to check open/write errors
     save_data(&key_counts, statistic_path.as_ref().unwrap());

@@ -1,0 +1,29 @@
+config:
+  pairs: false
+K+L, J: 1
+F+K, F+J: 1
+S+D+J+K, LControl: 1
+LControl, LControl+C: 2
+Down, Up: 3
+Right, Up+Right: 1
+Up, Down: 1
+Up, Up+Down: 1
+S+F+J, S+D+J: 1
+', K': 1
+Up+Down, Right: 1
+Up+Right, Up+Down: 1
+K, J+K: 1
+F+J, F+K: 1
+S+D+J, S+D+K: 1
+F+K+L, S+F: 1
+', Down': 1
+S+F, S+F+J: 1
+J, K: 1
+S+D+K, S+D+J+K: 1
+J+K, K+L: 1
+Up, LControl: 1
+F+K, F+K+L: 1
+Up+Down, Down: 1
+LControl+C: 1
+LControl: 1
+K, F+K: 1

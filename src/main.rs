@@ -486,7 +486,11 @@ fn main() {
             let mut buffer = [0; 1];
             io::stdin()
                 .read_exact(&mut buffer)
-                .expect("cannot read terminal input");
+                .or_else(|_| -> Result<_, ()> {
+                    println!("{}", "cannot read terminal input".red());
+                    std::process::exit(1);
+                })
+                .unwrap();
             let character = buffer[0] as char;
 
             match character {
@@ -502,17 +506,35 @@ fn main() {
 
     if path.exists() {
         let mut file = File::open(&path)
-            .expect(format!("file in {:?} exists but cannot be open", path).as_str());
+            .or_else(|_| -> Result<_, ()> {
+                println!(
+                    "{} {} {}",
+                    "file in".red(),
+                    path.to_string(),
+                    "exists but cannot be open".red()
+                );
+                std::process::exit(1);
+            })
+            .unwrap();
         let mut contents = String::new();
         file.read_to_string(&mut contents)
-            .expect(format!("file in {:?} exists but cannot be read", path).as_str());
+            .or_else(|_| -> Result<_, ()> {
+                println!(
+                    "{} {} {}",
+                    "file in".red(),
+                    path.to_string(),
+                    "exists but cannot be read".red()
+                );
+                std::process::exit(1);
+            })
+            .unwrap();
 
         key_counts = serde_yaml::from_str(&contents)
             .or_else(|_| -> Result<_, ()> {
                 println!(
                     "{} {} {}",
                     "error: data in output file".red(),
-                    some_or_empty(path.to_str()),
+                    path.to_string(),
                     "not valid and cannot be deserialize".red()
                 );
                 std::process::exit(1);
@@ -686,10 +708,18 @@ fn main() {
 
 fn save_data(data: &KeyCounts, path: &PathBuf) {
     let serialized = serde_yaml::to_string(data).expect("serialize to yaml panic");
-    let mut file =
-        File::create(path).expect(format!("cannot create / open file {:?}", path).as_str());
+    let mut file = File::create(path)
+        .or_else(|_| -> Result<_, ()> {
+            println!("{} {}", "cannot create / open file".red(), path.to_string(),);
+            std::process::exit(1);
+        })
+        .unwrap();
     file.write_all(serialized.as_bytes())
-        .expect(format!("cannot write to file {:?}", path).as_str());
+        .or_else(|_| -> Result<_, ()> {
+            println!("{} {}", "cannot write to file".red(), path.to_string(),);
+            std::process::exit(1);
+        })
+        .unwrap();
 }
 
 fn upend_trace(trace_step: TraceStep, path: &PathBuf, trace_plain_style: bool) {
@@ -697,7 +727,11 @@ fn upend_trace(trace_step: TraceStep, path: &PathBuf, trace_plain_style: bool) {
         .create(true)
         .append(true)
         .open(path)
-        .expect(format!("cannot create / open file {:?}", path).as_str());
+        .or_else(|_| -> Result<_, ()> {
+            println!("{} {}", "cannot create / open file".red(), path.to_string(),);
+            std::process::exit(1);
+        })
+        .unwrap();
 
     let text = match trace_step {
         TraceStep::First(keycode) => input_to_string(keycode),
@@ -712,9 +746,19 @@ fn upend_trace(trace_step: TraceStep, path: &PathBuf, trace_plain_style: bool) {
     };
 
     if trace_plain_style {
-        write!(file, "{} ", text).expect(format!("cannot write to file {:?}", path).as_str());
+        write!(file, "{} ", text)
+            .or_else(|_| -> Result<_, ()> {
+                println!("{} {}", "cannot write to file ".red(), path.to_string(),);
+                std::process::exit(1);
+            })
+            .unwrap();
     } else {
-        write!(file, "{}\n", text).expect(format!("cannot write to file {:?}", path).as_str());
+        write!(file, "{}\n", text)
+            .or_else(|_| -> Result<_, ()> {
+                println!("{} {}", "cannot write to file ".red(), path.to_string(),);
+                std::process::exit(1);
+            })
+            .unwrap();
     }
 }
 
@@ -752,7 +796,16 @@ fn check_config(config: Config, pairs: bool, no_chords: bool, path: &PathBuf) {
     }
 }
 
-fn some_or_empty(option: Option<&str>) ->
-&str {
-  if let Some(str) = option {str} else {"-"}
+trait Frmater {
+    fn to_string(&self) -> &str;
+}
+
+impl Frmater for PathBuf {
+    fn to_string(&self) -> &str {
+        if let Some(str) = self.to_str() {
+            str
+        } else {
+            "%path error%"
+        }
+    }
 }

@@ -271,7 +271,10 @@ fn main() {
 
                 std::process::exit(0);
             }
-            _ => println!("Unhandled option: {}", arg),
+            _ => {
+                println!("Unhandled option: {}", arg);
+                std::process::exit(1);
+            },
         }
     }
 

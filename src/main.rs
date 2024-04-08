@@ -489,29 +489,33 @@ fn main() {
         }
         if some {
             if pairs {
-                let last_iput = if last_pair.len() == 1 {
-                    Input::Single(last_pair[0])
-                } else {
-                    Input::Chord(last_pair.clone())
-                };
-
                 let input = if keys.len() == 1 {
                     Input::Single(keys[0])
                 } else {
                     Input::Chord(keys.clone())
                 };
 
-                let count_item = CountItem::Pair(last_iput, input);
-                *key_counts.entry(count_item.clone()).or_insert(0) += 1;
-                verbose!(
-                    verbose,
-                    "{:?} has been pressed {} times",
-                    keys.clone(),
-                    key_counts[&count_item]
-                );
+                // skip first iteration becouse it is have not pair
+                if last_pair.len() != 0 {
+                    let last_iput = if last_pair.len() == 1 {
+                        Input::Single(last_pair[0])
+                    } else {
+                        Input::Chord(last_pair.clone())
+                    };
 
-                // Is this expensive?)
-                save_data(&key_counts, statistic_path.as_ref().unwrap());
+                    let count_item = CountItem::Pair(last_iput, input);
+                    *key_counts.entry(count_item.clone()).or_insert(0) += 1;
+                    verbose!(
+                        verbose,
+                        "{:?} has been pressed {} times",
+                        keys.clone(),
+                        key_counts[&count_item]
+                    );
+
+                    // Is this expensive?)
+                    save_data(&key_counts, statistic_path.as_ref().unwrap());
+                }
+
                 last_pair = keys.clone();
             } else {
                 let input = if keys.len() == 1 {

@@ -625,3 +625,29 @@
 Regular([J], 326.472822ms)
 Regular([LControl], 430.327509ms)
 Regular([LControl, C], 118.73626ms)
+Init("2024-04-08T19:16:13.656173324+02:00")
+First([J])
+Regular([K], 197.997074ms)
+Regular([J], 257.084991ms)
+Regular([K], 211.518341ms)
+Regular([L], 279.967357ms)
+Regular([D], 312.085706ms)
+Regular([S], 24.721348ms)
+Regular([O], 170.429125ms)
+Regular([J], 344.977253ms)
+Regular([F], 171.595589ms)
+Regular([D], 160.986865ms)
+Regular([I], 130.286742ms)
+Regular([J], 372.556442ms)
+Regular([V], 354.448838ms)
+Regular([C, V], 142.54301ms)
+Regular([J], 618.549455ms)
+Regular([K], 633.985197ms)
+Regular([J, K], 7.114221ms)
+Regular([F], 450.490087ms)
+Regular([D, F], 133.669415ms)
+Regular([S], 332.640132ms)
+Regular([C], 663.357375ms)
+Regular([S], 446.02716ms)
+Regular([S, C], 56.179512ms)
+Regular([LControl], 629.62885ms)

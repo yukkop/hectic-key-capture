@@ -58,11 +58,10 @@ const MODIFY_OUTPUT_LONG: &str = "--modify-output";
 const TRACE_SHORT: &str = "-t";
 const TRACE_LONG: &str = "--trace";
 
-//const FORMAT_SHORT: &str = "-f";
-//const FORMAT_LONG: &str = "--format";
+const TRACE_PAIRS_SHORT: &str = "-p";
+const TRACE_PAIRS_LONG: &str = "--pairs";
 
 const DEFAULT_STATISTIC_PATH_YAML: &str = "key-capture-statistic.yaml";
-//const DEFAULT_STATISTIC_PATH_JSON: &str = "key-capture-statistic.json";
 
 macro_rules! verbose {
     ($verbose:expr, $($arg:tt)*) => {
@@ -77,6 +76,8 @@ pub enum TraceStep {
     First(Keycode),
     Regular(Keycode, Duration),
     Init(String),
+    Pair(Keycode, Keycode),
+    AfterExpectation(Keycode),
 }
 
 #[derive(Debug)]
@@ -155,6 +156,8 @@ fn main() {
     let mut verbose = false;
     let mut statistic_path: Option<PathBuf> = None;
     let mut trace_path: Option<PathBuf> = None;
+    let mut trace_pairs_path: Option<PathBuf> = None;
+    let mut trace_pairs_interval: Option<u64> = None;
     let mut first_trace_step = true;
 
     let mut args = env::args();
@@ -199,6 +202,16 @@ fn main() {
                     .expect(format!("provide value to {} (trance)", arg).as_str());
                 let path = Path::new(&path);
                 trace_path = Some(path.to_path_buf());
+            }
+            TRACE_PAIRS_SHORT | TRACE_PAIRS_LONG => {
+                trace_pairs_interval = Some(
+                    args.next()
+                        .expect(
+                            format!("provide interval duration (ms) to {} (pairs)", arg).as_str(),
+                        )
+                        .parse()
+                        .expect("value for sensitivity must be a number > 0"),
+                )
             }
             VERBOSE_SHORT | VERBOSE_LONG => verbose = true,
             HELP_SHORT | "-?" | "?" | "h" | HELP_LONG | "-help" | "help" => {
@@ -264,9 +277,9 @@ fn main() {
                     output_long = OUTPUT_LONG.cyan(),
                     output_value = "<path>".cyan(),
                     default = "Default:".green(),
-                  trace_short = TRACE_SHORT.cyan(),
-                  trace_long =  TRACE_LONG.cyan(),
-                  trace_value =  "<path>".cyan(),
+                    trace_short = TRACE_SHORT.cyan(),
+                    trace_long = TRACE_LONG.cyan(),
+                    trace_value = "<path>".cyan(),
                 );
 
                 std::process::exit(0);
@@ -291,7 +304,6 @@ fn main() {
         key_counts = serde_yaml::from_str(&contents)
             .expect("data in output file {:?} not valid and cannot be deserialize");
 
-
         if !force_modify_output {
             println!(
                 "{}: file that you provide like output ({:?}) already exist",
@@ -311,6 +323,12 @@ fn main() {
                 'y' | 'Y' => {}
                 _ => std::process::exit(0),
             }
+        }
+    }
+
+    if let Some(_) = trace_pairs_interval {
+        if let None = trace_path {
+            println!("trace pairs can be only used if trace enable");
         }
     }
 
@@ -352,9 +370,16 @@ fn main() {
 
                 if let Some(ref trace_path) = trace_path {
                     let duration = start.elapsed();
+
                     let step = if first_trace_step {
                         first_trace_step = false;
                         TraceStep::First(*key)
+                    } else if let Some(interval) = trace_pairs_interval {
+                        if duration - last_duration > Duration::from_millis(interval) {
+                            TraceStep::AfterExpectation(*key)
+                        } else {
+                            TraceStep::Pair(*key, *key)
+                        }
                     } else {
                         TraceStep::Regular(*key, duration - last_duration)
                     };

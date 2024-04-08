@@ -85,7 +85,15 @@ pub enum TraceStep {
 }
 
 #[derive(Debug)]
-pub struct KeyCounts(pub HashMap<CountItem, u32>);
+pub struct KeyCounts {
+    pub config: Config,
+    pub map: HashMap<CountItem, u32>,
+}
+
+#[derive(Debug, Clone, Copy, Default, Deserialize, Serialize)]
+pub struct Config {
+    pub pairs: bool,
+}
 
 #[derive(Debug, Eq, PartialEq, Hash, Clone)]
 pub enum CountItem {
@@ -109,25 +117,24 @@ fn input_to_string(input: Input) -> String {
             let keys_str: Vec<String> = keys.iter().map(keycode_to_string).collect();
             format!("Chord({:?})", keys_str.join("+")).replace("\"", "")
         }
-        Input::Single(key) => {
-            format!("Single({:?})", keycode_to_string(&key))
-        }
+        Input::Single(key) => format!("Single({:?})", keycode_to_string(&key)).replace("\"", ""),
     }
 }
 
-// Custom Serialize implementation for KeyCounts
 impl Serialize for KeyCounts {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
     {
-        let mut map = serializer.serialize_map(Some(self.0.len()))?;
-        for (key, value) in &self.0 {
-            // Serialize each CountItem as a string
+        let mut map = serializer.serialize_map(Some(self.map.len()))?;
+
+        map.serialize_entry("config", &self.config)?;
+
+        for (key, value) in &self.map {
             let key_str = match key {
                 CountItem::Single(input) => {
                     let input_str: String = input_to_string(input.clone());
-                    format!("Single({:?})", input_str)
+                    format!("Single({})", input_str)
                 }
                 CountItem::Pair(input1, input2) => {
                     let input1_str: String = input_to_string(input1.clone());
@@ -137,11 +144,12 @@ impl Serialize for KeyCounts {
             };
             map.serialize_entry(&key_str, value)?;
         }
+
         map.end()
     }
 }
 
-/// unwrap firs braces ignoring all text outside
+/// Unwrap firs braces ignoring all text outside
 fn unwrap_braces(s: &str) -> Result<&str, String> {
     log::trace!("unwrap braces {}", s);
 
@@ -192,26 +200,6 @@ fn parse_input_from_string(s: &str) -> Result<Input, String> {
 }
 
 fn parse_count_item(s: &str) -> Result<CountItem, String> {
-    fn split_moded(input: &str, delimiter: &str) -> Vec<String> {
-        let mut result = Vec::new();
-        let mut start = 0;
-        let mut end = 0;
-
-        while let Some(index) = input[end..].find(delimiter) {
-            end += index;
-            // Add the length of the delimiter to include it in the substring
-            let next_end = end + delimiter.len();
-            result.push(input[start..next_end].to_string());
-            start = next_end;
-        }
-
-        if start < input.len() {
-            result.push(input[start..].to_string());
-        }
-
-        result
-    }
-
     if s.starts_with("Single") {
         let input = parse_input_from_string(unwrap_braces(s)?)?;
         Ok(CountItem::Single(input))
@@ -247,14 +235,35 @@ impl<'de> Deserialize<'de> for KeyCounts {
                 M: MapAccess<'de>,
             {
                 let mut counts = HashMap::new();
-                while let Some((key_str, value)) = map.next_entry::<String, u32>()? {
-                    let count_item = parse_count_item(&key_str).map_err(de::Error::custom)?;
-                    counts.insert(count_item, value);
+                let mut config = None;
+
+                while let Some((key_str, value)) = map.next_entry::<String, serde_yaml::Value>()? {
+                    match key_str.as_str() {
+                        "config" => {
+                            config =
+                                Some(serde_yaml::from_value(value).map_err(de::Error::custom)?);
+                        }
+                        _ => {
+                            let count_item =
+                                parse_count_item(&key_str).map_err(de::Error::custom)?;
+                            counts.insert(
+                                count_item,
+                                value
+                                    .as_u64()
+                                    .ok_or_else(|| de::Error::custom("Expected u64 value"))?
+                                    as u32,
+                            );
+                        }
+                    }
                 }
-                Ok(KeyCounts(counts))
+
+                let config = config.unwrap_or_default();
+                Ok(KeyCounts {
+                    config,
+                    map: counts,
+                })
             }
         }
-
         deserializer.deserialize_map(KeyCountsVisitor)
     }
 }
@@ -263,20 +272,23 @@ impl Deref for KeyCounts {
     type Target = HashMap<CountItem, u32>;
 
     fn deref(&self) -> &Self::Target {
-        &self.0
+        &self.map
     }
 }
 
 impl DerefMut for KeyCounts {
     fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
+        &mut self.map
     }
 }
 
 fn main() {
     env_logger::init();
 
-    let mut key_counts = KeyCounts(HashMap::new());
+    let mut key_counts = KeyCounts {
+        config: Config::default(),
+        map: HashMap::new(),
+    };
 
     let mut sensitivity = PRODUCTIVE_SENSITIVITY_VALUE;
     let mut force_modify_output = false;
@@ -458,6 +470,8 @@ fn main() {
         }
     }
 
+    check_config(key_counts.config, pairs, statistic_path.as_ref().unwrap());
+
     // save first time to check open/write errors
     save_data(&key_counts, statistic_path.as_ref().unwrap());
     if let Some(ref trace_path) = trace_path {
@@ -574,4 +588,26 @@ fn upend_trace(trace_step: TraceStep, path: &PathBuf) {
 
     writeln!(file, "\r{:?}", trace_step)
         .expect(format!("cannot write to file {:?}", path).as_str());
+}
+
+fn check_config(config: Config, pairs: bool, path: &PathBuf) {
+    let error = format!(
+        "Config in output file that you provide {:?} do not match to your options\nit is means different settings were used to create this file\n",
+        path
+    ).red();
+    if config.pairs != pairs {
+        println!(
+            "{}{}{}{}{}{} {}{}{}",
+            error,
+            "Details: ".red(),
+            PAIRS_SHORT.cyan(),
+            " or ".red(),
+            PAIRS_LONG.cyan(),
+            " is ".red(),
+            pairs.to_string().cyan(),
+            " when in file ".red(),
+            config.pairs.to_string().cyan()
+        );
+        std::process::exit(1);
+    }
 }

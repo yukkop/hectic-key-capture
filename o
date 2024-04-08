@@ -1,0 +1,69 @@
+config:
+  pairs: false
+Single(Chord(S+Up+Down)): 1
+Single(Chord(Up+Right)): 5
+Single(Chord(S+D+F)): 4
+Single(Chord(S+J+L)): 1
+Single(Chord(S+F+Up+Down)): 1
+Single(Chord(S+Left)): 1
+Single(Chord(D+F)): 6
+Single(Chord(D+F+J+L)): 1
+Single(Chord(D+J+L)): 1
+Single(Chord(S+F)): 1
+Single(Chord(F+Up)): 9
+Single(Chord(S+F+Up)): 1
+Single(Chord(S+D+Up+Down)): 1
+Single(Chord(I+F)): 1
+Single(Chord(D+F+K)): 1
+Single(Chord(S+K+L)): 2
+Single(Chord(F+Down)): 13
+Single(Chord(S+F+Down)): 2
+Single(Chord(F+J)): 3
+Single(Chord(F+Up+Down)): 1
+Single(Chord(E+I+F)): 1
+Single(Chord(Up+Down)): 7
+Pair(Chord(J), Chord(LControl)): 1
+Pair(Chord(K), Chord(J)): 2
+Single(Chord(J)): 5
+Single(Chord(S+D+Down)): 9
+Single(Chord(S+Up)): 4
+Single(Chord(S+L)): 2
+Single(Chord(F+Left)): 1
+Single(Chord(LControl)): 8
+Single(Chord(S+F+K)): 1
+Single(Chord(D+Down)): 2
+Pair(Chord(), Chord(K)): 1
+Single(Chord(D+F+J+K)): 1
+Single(Chord(D+Up)): 3
+Single(Chord(Down)): 11
+Single(Chord(D+F+Down)): 3
+Single(Chord(S+F+Up+Right)): 4
+Single(Chord(S+D+Up)): 5
+Pair(Chord(LControl), Chord(LControl+C)): 1
+Single(Chord(E+S)): 1
+Single(Chord(S+Up+Right)): 2
+Single(Chord(S+D)): 2
+Single(Chord(F)): 1
+Pair(Chord(J), Chord(K)): 1
+Single(Chord(S+D+F+Up)): 1
+Single(Chord(S+F+J)): 1
+Single(Chord(S+D+F+Down)): 1
+Single(Chord(D+F+Right+Down)): 1
+Single(Chord(S+Down)): 2
+Single(Chord(E+S+J)): 1
+Single(Chord(S+D+F+Up+Right)): 3
+Single(Chord(S+D+Left)): 1
+Single(Chord(F+Right)): 2
+Single(Chord(F+Up+Right)): 5
+Single(Chord(Right)): 1
+Single(Chord(K)): 1
+Single(Chord(S+D+Up+Right)): 1
+Single(Chord(S)): 1
+Single(Chord(Up)): 14
+Single(Chord(D)): 2
+Single(Chord(S+D+F+Right)): 1
+Single(Chord(J+K)): 1
+Single(Chord(D+F+J+M)): 1
+Single(Chord(D+K)): 1
+Single(Chord(LControl+C)): 7
+Single(Chord(D+Right+Down)): 1

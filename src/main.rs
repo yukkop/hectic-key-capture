@@ -569,7 +569,7 @@ fn main() {
                             verbose!(
                                 verbose,
                                 "{:?} has been pressed {} times",
-                                *key,
+                                count_item,
                                 key_counts[&count_item]
                             );
 
@@ -619,7 +619,7 @@ fn main() {
                         verbose!(
                             verbose,
                             "{:?} has been pressed {} times",
-                            keys.clone(),
+                            count_item,
                             key_counts[&count_item]
                         );
 

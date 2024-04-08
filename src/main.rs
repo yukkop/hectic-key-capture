@@ -74,8 +74,8 @@ macro_rules! verbose {
 
 #[derive(Debug)]
 pub enum TraceStep {
-    First(Keycode),
-    Regular(Keycode, Duration),
+    First(Vec<Keycode>),
+    Regular(Vec<Keycode>, Duration),
     Init(String),
 }
 
@@ -264,9 +264,9 @@ fn main() {
                     output_long = OUTPUT_LONG.cyan(),
                     output_value = "<path>".cyan(),
                     default = "Default:".green(),
-                  trace_short = TRACE_SHORT.cyan(),
-                  trace_long =  TRACE_LONG.cyan(),
-                  trace_value =  "<path>".cyan(),
+                    trace_short = TRACE_SHORT.cyan(),
+                    trace_long = TRACE_LONG.cyan(),
+                    trace_value = "<path>".cyan(),
                 );
 
                 std::process::exit(0);
@@ -293,7 +293,6 @@ fn main() {
 
         key_counts = serde_yaml::from_str(&contents)
             .expect("data in output file {:?} not valid and cannot be deserialize");
-
 
         if !force_modify_output {
             println!(
@@ -335,6 +334,7 @@ fn main() {
 
     let start = Instant::now();
     let mut last_duration = start.elapsed();
+    let mut some = false;
 
     loop {
         let keys = device_state.get_keys();
@@ -342,6 +342,7 @@ fn main() {
         // Check for new key presses
         for key in &keys {
             if !last_keys.contains(key) {
+                some = true;
                 *key_counts.entry(*key).or_insert(0) += 1;
                 verbose!(
                     verbose,
@@ -352,20 +353,22 @@ fn main() {
 
                 // Is this expensive?)
                 save_data(&key_counts, statistic_path.as_ref().unwrap());
+            }
+        }
+        if let Some(ref trace_path) = trace_path {
+            if some {
+                let duration = start.elapsed();
+                let step = if first_trace_step {
+                    first_trace_step = false;
+                    TraceStep::First(keys.clone())
+                } else {
+                    TraceStep::Regular(keys.clone(), duration - last_duration)
+                };
 
-                if let Some(ref trace_path) = trace_path {
-                    let duration = start.elapsed();
-                    let step = if first_trace_step {
-                        first_trace_step = false;
-                        TraceStep::First(*key)
-                    } else {
-                        TraceStep::Regular(*key, duration - last_duration)
-                    };
+                last_duration = duration;
 
-                    last_duration = duration;
-
-                    upend_trace(step, &trace_path);
-                }
+                upend_trace(step, &trace_path);
+                some = false;
             }
         }
 

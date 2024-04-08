@@ -65,6 +65,9 @@ const TRACE_LONG: &str = "--trace";
 const PAIRS_SHORT: &str = "-p";
 const PAIRS_LONG: &str = "--pairs";
 
+const PLAIN_SHORT: &str = "-P";
+const PLAIN_LONG: &str = "--plain-style";
+
 const NO_CHORDS_LONG: &str = "--no-chords";
 
 const DEFAULT_STATISTIC_PATH_YAML: &str = "key-capture-statistic.yaml";
@@ -265,6 +268,7 @@ fn main() {
     let mut statistic_path: Option<PathBuf> = None;
     let mut trace_path: Option<PathBuf> = None;
     let mut pairs = false;
+    let mut trace_plain_style = false;
     let mut first_trace_step = true;
 
     let mut args = env::args();
@@ -296,9 +300,7 @@ fn main() {
             MODIFY_OUTPUT_SHORT | MODIFY_OUTPUT_LONG => {
                 force_modify_output = true;
             }
-            PAIRS_SHORT | PAIRS_LONG => {
-                pairs = true;
-            }
+            PAIRS_SHORT | PAIRS_LONG => pairs = true,
             OUTPUT_SHORT | OUTPUT_LONG => {
                 let path = args
                     .next()
@@ -316,9 +318,8 @@ fn main() {
                 let path = Path::new(&path);
                 trace_path = Some(path.to_path_buf());
             }
-            NO_CHORDS_LONG => {
-                no_chords = true;
-            }
+            NO_CHORDS_LONG => no_chords = true,
+            PLAIN_SHORT | PLAIN_LONG => trace_plain_style = true,
             VERBOSE_SHORT | VERBOSE_LONG => verbose = true,
             HELP_SHORT | "-?" | "?" | "h" | HELP_LONG | "-help" | "help" => {
                 println!(
@@ -348,7 +349,6 @@ fn main() {
     {no_chords_long}
                     Get inputs separately not paying attention to simultaneous presses
                     
-
     {modify_output_short}, {modify_output_long}         
                     Force modify output file if it already exists
 
@@ -369,6 +369,9 @@ fn main() {
 
     {verbose_short}, {verbose_long}         
                     Describe the steps of the program
+
+    {plain_short}, {plain_long}
+                    Trace output in postscript plain style.
 
     {help_short}, {help_long}         
                     This message"#,
@@ -399,8 +402,10 @@ fn main() {
                     pairs_short = PAIRS_SHORT.cyan(),
                     pairs_long = PAIRS_LONG.cyan(),
                     no_chords_long = NO_CHORDS_LONG.cyan(),
-                  modify_trace_short =  MODIFY_TRACE_SHORT.cyan(),
-                  modify_trace_long  =  MODIFY_TRACE_LONG .cyan(),
+                    modify_trace_short = MODIFY_TRACE_SHORT.cyan(),
+                    modify_trace_long = MODIFY_TRACE_LONG.cyan(),
+                    plain_short = PLAIN_SHORT.cyan(),
+                    plain_long = PLAIN_LONG.cyan(),
                 );
 
                 std::process::exit(0);
@@ -410,6 +415,28 @@ fn main() {
                 std::process::exit(1);
             }
         }
+    }
+
+    if trace_plain_style && trace_path.is_none() {
+        println!(
+            "{warning} {PLAIN_SHORT} {or} {PLAIN_LONG} {text}{TRACE_SHORT} {pipe} {TRACE_LONG}{brace}",
+            warning = "warning!:".yellow(),
+            or = "or".yellow(),
+            text = "ignored becouse you do not specify trace option (".yellow(),
+            pipe = "|".yellow(),
+            brace = ")".yellow(),
+        );
+    }
+
+    if force_modify_trace && trace_path.is_none() {
+        println!(
+            "{warning} {MODIFY_TRACE_SHORT} {or} {MODIFY_TRACE_LONG} {text}{TRACE_SHORT} {pipe} {TRACE_LONG}{brace}",
+            warning = "warning!:".yellow(),
+            or = "or".yellow(),
+            text = "ignored becouse you do not specify trace option (".yellow(),
+            pipe = "|".yellow(),
+            brace = ")".yellow(),
+        );
     }
 
     // process the output file
@@ -488,7 +515,7 @@ fn main() {
                 }
             }
         }
-        upend_trace(TraceStep::Empty, &trace_path);
+        upend_trace(TraceStep::Empty, &trace_path, trace_plain_style);
     }
 
     let device_state = DeviceState::new();
@@ -557,7 +584,7 @@ fn main() {
 
                         last_duration = duration;
 
-                        upend_trace(step, &trace_path);
+                        upend_trace(step, &trace_path, trace_plain_style);
                     }
                 }
             }
@@ -607,7 +634,7 @@ fn main() {
 
                     last_duration = duration;
 
-                    upend_trace(step, &trace_path);
+                    upend_trace(step, &trace_path, trace_plain_style);
                 }
             }
             some = false;
@@ -646,7 +673,7 @@ fn save_data(data: &KeyCounts, path: &PathBuf) {
         .expect(format!("cannot write to file {:?}", path).as_str());
 }
 
-fn upend_trace(trace_step: TraceStep, path: &PathBuf) {
+fn upend_trace(trace_step: TraceStep, path: &PathBuf, trace_plain_style: bool) {
     let mut file = OpenOptions::new()
         .create(true)
         .append(true)
@@ -656,12 +683,20 @@ fn upend_trace(trace_step: TraceStep, path: &PathBuf) {
     let text = match trace_step {
         TraceStep::First(keycode) => input_to_string(keycode),
         TraceStep::Regular(keycode, duration) => {
-            format!("{} after {:?}", input_to_string(keycode), duration).replace("\"", "")
+            if trace_plain_style {
+                input_to_string(keycode)
+            } else {
+                format!("{} after {:?}", input_to_string(keycode), duration).replace("\"", "")
+            }
         }
         TraceStep::Empty => return,
     };
 
-    write!(file, "{}\n", text).expect(format!("cannot write to file {:?}", path).as_str());
+    if trace_plain_style {
+        write!(file, "{} ", text).expect(format!("cannot write to file {:?}", path).as_str());
+    } else {
+        write!(file, "{}\n", text).expect(format!("cannot write to file {:?}", path).as_str());
+    }
 }
 
 fn check_config(config: Config, pairs: bool, no_chords: bool, path: &PathBuf) {

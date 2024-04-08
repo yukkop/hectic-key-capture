@@ -835,3 +835,68 @@
 Regular([S, D, Up, Right], 348.402µs)
 Regular([S, D, Up, Down], 51.091414ms)
 Regular([LControl], 137.382035ms)
+Init("2024-04-08T21:12:42.023135177+02:00")
+First([K])
+Regular([J], 449.401524ms)
+Regular([K], 306.098528ms)
+Regular([J], 209.550222ms)
+Regular([L], 242.974784ms)
+Regular([K, L], 193.946796ms)
+Regular([J, K], 142.553609ms)
+Regular([F], 247.156785ms)
+Regular([D, F], 212.715462ms)
+Regular([S, D], 28.999527ms)
+Regular([D], 430.553278ms)
+Regular([D], 165.458611ms)
+Regular([D], 141.73006ms)
+Regular([D], 160.294793ms)
+Regular([D], 142.207845ms)
+Regular([D], 148.012724ms)
+Regular([D], 155.356262ms)
+Regular([D], 174.989084ms)
+Regular([D], 180.964922ms)
+Regular([D], 151.265965ms)
+Regular([LControl], 283.179963ms)
+Regular([LControl, C], 185.98354ms)
+Init("2024-04-08T21:12:48.449451223+02:00")
+First([D])
+Regular([D], 225.906151ms)
+Regular([D], 163.947467ms)
+Regular([D], 230.911502ms)
+Regular([D], 151.083364ms)
+Regular([D], 175.042099ms)
+Regular([D], 150.900556ms)
+Regular([D], 160.815076ms)
+Regular([D], 145.244877ms)
+Regular([D], 163.052996ms)
+Regular([D], 162.421774ms)
+Regular([D], 163.079326ms)
+Regular([D], 160.988965ms)
+Regular([D], 145.153318ms)
+Regular([LControl], 176.330798ms)
+Regular([LControl, C], 118.379684ms)
+Init("2024-04-08T21:13:30.442902500+02:00")
+First([D])
+Regular([D], 374.289796ms)
+Regular([D], 667.133795ms)
+Regular([D], 447.477644ms)
+Regular([D], 469.87235ms)
+Regular([D], 420.547284ms)
+Regular([D], 401.863063ms)
+Regular([D], 364.655932ms)
+Regular([LControl], 513.692001ms)
+Init("2024-04-08T21:13:49.018621578+02:00")
+First([S])
+Regular([D], 340.014027ms)
+Regular([S], 362.218579ms)
+Regular([D], 315.046414ms)
+Regular([S], 306.044451ms)
+Regular([D], 280.120262ms)
+Regular([S], 316.331915ms)
+Regular([D], 242.232195ms)
+Regular([S], 300.900991ms)
+Regular([D], 182.515566ms)
+Regular([S], 443.631335ms)
+Regular([D], 244.213479ms)
+Regular([LControl], 1.864186065s)
+Regular([LControl, C], 191.711488ms)

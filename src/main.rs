@@ -102,28 +102,17 @@ impl Config {
 
 #[derive(Debug, Eq, PartialEq, Hash, Clone)]
 pub enum CountItem {
-    Single(Input),
-    Pair(Input, Input),
-}
-
-#[derive(Debug, Eq, PartialEq, Hash, Clone)]
-pub enum Input {
-    Single(Keycode),
-    Chord(Vec<Keycode>),
+    Single(Vec<Keycode>),
+    Pair(Vec<Keycode>, Vec<Keycode>),
 }
 
 fn keycode_to_string(keycode: &Keycode) -> String {
     format!("{:?}", keycode)
 }
 
-fn input_to_string(input: Input) -> String {
-    match input {
-        Input::Chord(keys) => {
-            let keys_str: Vec<String> = keys.iter().map(keycode_to_string).collect();
-            format!("{:?}", keys_str.join("+")).replace("\"", "")
-        }
-        Input::Single(key) => format!("{:?}", keycode_to_string(&key)).replace("\"", ""),
-    }
+fn input_to_string(input: Vec<Keycode>) -> String {
+    let keys_str: Vec<String> = input.iter().map(keycode_to_string).collect();
+    format!("{:?}", keys_str.join("+")).replace("\"", "")
 }
 
 impl Serialize for KeyCounts {
@@ -159,7 +148,7 @@ fn parse_keycode_from_string(s: &str) -> Result<Keycode, String> {
     Keycode::from_str(s)
 }
 
-fn parse_input_from_string(s: &str) -> Result<Input, String> {
+fn parse_input_from_string(s: &str) -> Result<Vec<Keycode>, String> {
     let keycodes = s
         .split('+')
         .filter_map(|s| {
@@ -172,11 +161,7 @@ fn parse_input_from_string(s: &str) -> Result<Input, String> {
         })
         .collect::<Result<Vec<Keycode>, String>>()?;
 
-    if keycodes.len() == 1 {
-        Ok(Input::Single(keycodes[0]))
-    } else {
-        Ok(Input::Chord(keycodes))
-    }
+    Ok(keycodes)
 
     //Err("Unrecognized Input format".to_string())
 }
@@ -185,7 +170,7 @@ fn parse_count_item(s: &str) -> Result<CountItem, String> {
     let inputs = s
         .split(", ")
         .map(parse_input_from_string)
-        .collect::<Result<Vec<Input>, String>>()?;
+        .collect::<Result<Vec<Vec<Keycode>>, String>>()?;
 
     if inputs.len() == 1 {
         Ok(CountItem::Single(inputs[0].clone()))
@@ -495,13 +480,9 @@ fn main() {
                 some = true;
                 if no_chords {
                     if pairs {
-                        let input = Input::Single(*key);
-
                         // skip first iteration becouse it is have not pair
                         if last_pair.len() != 0 {
-                            let last_iput = Input::Single(last_pair[0]);
-
-                            let count_item = CountItem::Pair(last_iput, input);
+                            let count_item = CountItem::Pair(last_pair, vec![*key]);
                             *key_counts.entry(count_item.clone()).or_insert(0) += 1;
 
                             verbose!(
@@ -517,9 +498,7 @@ fn main() {
 
                         last_pair = vec![*key];
                     } else {
-                        let input = Input::Single(*key);
-
-                        let count_item = CountItem::Single(input);
+                        let count_item = CountItem::Single(vec![*key]);
                         *key_counts.entry(count_item.clone()).or_insert(0) += 1;
                         verbose!(
                             verbose,
@@ -538,21 +517,9 @@ fn main() {
         if some {
             if !no_chords {
                 if pairs {
-                    let input = if keys.len() == 1 {
-                        Input::Single(keys[0])
-                    } else {
-                        Input::Chord(keys.clone())
-                    };
-
                     // skip first iteration becouse it is have not pair
                     if last_pair.len() != 0 {
-                        let last_iput = if last_pair.len() == 1 {
-                            Input::Single(last_pair[0])
-                        } else {
-                            Input::Chord(last_pair.clone())
-                        };
-
-                        let count_item = CountItem::Pair(last_iput, input);
+                        let count_item = CountItem::Pair(last_pair, keys.clone());
                         *key_counts.entry(count_item.clone()).or_insert(0) += 1;
                         verbose!(
                             verbose,
@@ -567,13 +534,7 @@ fn main() {
 
                     last_pair = keys.clone();
                 } else {
-                    let input = if keys.len() == 1 {
-                        Input::Single(keys[0])
-                    } else {
-                        Input::Chord(keys.clone())
-                    };
-
-                    let count_item = CountItem::Single(input);
+                    let count_item = CountItem::Single(keys.clone());
                     *key_counts.entry(count_item.clone()).or_insert(0) += 1;
                     verbose!(
                         verbose,

@@ -1,5 +1,4 @@
 use ahash::AHasher;
-use chrono::Local;
 use colored::*;
 use core::fmt;
 use crossterm::event::{poll, KeyModifiers};
@@ -79,7 +78,7 @@ macro_rules! verbose {
 pub enum TraceStep {
     First(Vec<Keycode>),
     Regular(Vec<Keycode>, Duration),
-    Init(String),
+    Empty,
 }
 
 #[derive(Debug)]
@@ -453,7 +452,7 @@ fn main() {
     // save first time to check open/write errors
     save_data(&key_counts, statistic_path.as_ref().unwrap());
     if let Some(ref trace_path) = trace_path {
-        upend_trace(TraceStep::Init(Local::now().to_rfc3339()), &trace_path);
+        upend_trace(TraceStep::Empty, &trace_path);
     }
 
     let device_state = DeviceState::new();
@@ -604,8 +603,15 @@ fn upend_trace(trace_step: TraceStep, path: &PathBuf) {
         .open(path)
         .expect(format!("cannot create / open file {:?}", path).as_str());
 
-    writeln!(file, "\r{:?}", trace_step)
-        .expect(format!("cannot write to file {:?}", path).as_str());
+    let text = match trace_step {
+        TraceStep::First(keycode) => input_to_string(keycode),
+        TraceStep::Regular(keycode, duration) => {
+            format!("{} after {:?}", input_to_string(keycode), duration).replace("\"", "")
+        }
+        TraceStep::Empty => return,
+    };
+
+    write!(file, "{}\n", text).expect(format!("cannot write to file {:?}", path).as_str());
 }
 
 fn check_config(config: Config, pairs: bool, no_chords: bool, path: &PathBuf) {

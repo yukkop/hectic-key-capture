@@ -1,0 +1,18 @@
+config:
+  pairs: false
+Single(Chord(S+Down)): 1
+Single(Chord(J)): 5
+Single(Chord(F)): 1
+Single(Chord(Right)): 1
+Single(Chord(LControl+Right)): 1
+Single(Chord(D)): 6
+Single(Chord(LShift)): 1
+Single(Chord(S)): 1
+Single(Chord(Down)): 3
+Single(Chord(LControl+C)): 2
+Single(Chord(Up)): 7
+Single(Chord(LControl+S)): 1
+Single(Chord(Left)): 1
+Single(Chord(LControl+D)): 1
+Single(Chord(LControl)): 3
+Single(Chord(Enter)): 1

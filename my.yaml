@@ -1,0 +1,15 @@
+config:
+  pairs: false
+Single(Chord(D+F)): 1
+Single(Single(D)): 2
+Single(Chord(F+J)): 1
+Single(Chord(D+K)): 1
+Single(Single(LControl)): 1
+Single(Chord(S+K)): 1
+Single(Chord(LControl+C)): 1
+Single(Single(F)): 3
+Single(Single(S)): 1
+Single(Chord(F+K)): 1
+Single(Chord(D+J)): 1
+Single(Single(J)): 7
+Single(Chord(S+D+J)): 1

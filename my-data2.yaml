@@ -1,0 +1,8 @@
+config:
+  pairs: false
+Single(Chord(F+K)): 1
+Single(Chord(K)): 1
+Single(Chord(LControl+C)): 1
+Single(Chord(F+J+K)): 1
+Single(Chord(J)): 8
+Single(Chord(LControl)): 1

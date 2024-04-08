@@ -339,3 +339,78 @@
 Regular([J, K], 96.58764ms)
 Regular([LControl], 157.369081ms)
 Regular([LControl, C], 77.226831ms)
+Init("2024-04-08T18:35:08.908317734+02:00")
+First([Down])
+Regular([Up], 258.844734ms)
+Regular([Down], 157.987541ms)
+Regular([Up], 198.695363ms)
+Regular([D], 257.312114ms)
+Regular([Right], 298.754593ms)
+Regular([Up], 218.64859ms)
+Regular([S], 201.739063ms)
+Regular([S, Down], 25.113981ms)
+Regular([Down], 346.591125ms)
+Regular([Up], 255.932801ms)
+Regular([Up], 210.727596ms)
+Regular([Up], 164.264485ms)
+Regular([Up], 154.597623ms)
+Regular([F], 163.464657ms)
+Regular([D], 255.448484ms)
+Regular([LShift], 620.670559ms)
+Regular([LControl], 1.194701607s)
+Regular([LControl, S], 285.495553ms)
+Regular([LControl, D], 325.360678ms)
+Regular([LControl, Right], 306.388578ms)
+Regular([Left], 101.823734ms)
+Regular([D], 473.724756ms)
+Regular([D], 164.044082ms)
+Regular([D], 152.576818ms)
+Regular([D], 188.367393ms)
+Regular([Enter], 2.200661009s)
+Regular([LControl], 1.229821886s)
+Regular([LControl, C], 325.622908ms)
+Init("2024-04-08T18:36:00.328654969+02:00")
+First([J])
+Regular([J], 170.182758ms)
+Regular([J], 183.701744ms)
+Regular([J], 147.746622ms)
+Regular([J], 159.19987ms)
+Regular([LControl], 337.423626ms)
+Regular([LControl, C], 136.142301ms)
+Init("2024-04-08T18:36:29.539615267+02:00")
+First([J])
+Regular([K], 113.593825ms)
+Regular([F, J, K], 98.708278ms)
+Regular([F, K], 137.899662ms)
+Regular([J], 87.474421ms)
+Regular([J], 103.417167ms)
+Regular([J], 209.507049ms)
+Regular([J], 308.117504ms)
+Regular([J], 168.720939ms)
+Regular([J], 156.281054ms)
+Regular([J], 151.554533ms)
+Regular([LControl], 1.126719811s)
+Regular([LControl, C], 45.414867ms)
+Init("2024-04-08T18:37:45.192111971+02:00")
+First([J])
+Regular([F, J], 100.134579ms)
+Regular([F, K], 25.425875ms)
+Regular([D, F], 93.564936ms)
+Regular([D, J], 42.256463ms)
+Regular([S, D, J], 33.463355ms)
+Regular([S, K], 68.786445ms)
+Regular([J], 88.677473ms)
+Regular([J], 218.304513ms)
+Regular([J], 167.057954ms)
+Regular([J], 159.151689ms)
+Regular([J], 146.328635ms)
+Regular([F], 189.858532ms)
+Regular([D], 122.994438ms)
+Regular([D, K], 424.045µs)
+Regular([J], 162.98646ms)
+Regular([F], 190.969071ms)
+Regular([S], 110.620717ms)
+Regular([D], 240.078177ms)
+Regular([F], 116.098013ms)
+Regular([LControl], 857.069118ms)
+Regular([LControl, C], 116.988441ms)

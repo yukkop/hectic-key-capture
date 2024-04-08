@@ -504,8 +504,19 @@ fn main() {
         }
         if some {
             if pairs {
-                let count_item =
-                    CountItem::Pair(Input::Chord(last_pair.clone()), Input::Chord(keys.clone()));
+                let last_iput = if last_pair.len() == 1 {
+                    Input::Single(last_pair[0])
+                } else {
+                    Input::Chord(last_pair.clone())
+                };
+
+                let input = if keys.len() == 1 {
+                    Input::Single(keys[0])
+                } else {
+                    Input::Chord(keys.clone())
+                };
+
+                let count_item = CountItem::Pair(last_iput, input);
                 *key_counts.entry(count_item.clone()).or_insert(0) += 1;
                 verbose!(
                     verbose,
@@ -518,7 +529,13 @@ fn main() {
                 save_data(&key_counts, statistic_path.as_ref().unwrap());
                 last_pair = keys.clone();
             } else {
-                let count_item = CountItem::Single(Input::Chord(keys.clone()));
+                let input = if keys.len() == 1 {
+                    Input::Single(keys[0])
+                } else {
+                    Input::Chord(keys.clone())
+                };
+
+                let count_item = CountItem::Single(input);
                 *key_counts.entry(count_item.clone()).or_insert(0) += 1;
                 verbose!(
                     verbose,
@@ -597,16 +614,15 @@ fn check_config(config: Config, pairs: bool, path: &PathBuf) {
     ).red();
     if config.pairs != pairs {
         println!(
-            "{}{}{}{}{}{} {}{}{}",
-            error,
-            "Details: ".red(),
-            PAIRS_SHORT.cyan(),
-            " or ".red(),
-            PAIRS_LONG.cyan(),
-            " is ".red(),
-            pairs.to_string().cyan(),
-            " when in file ".red(),
-            config.pairs.to_string().cyan()
+            "{error}{details_title}{pairs_short} {or} {pairs_long} {is} {pairs} {when_in_file} {config_pairs}",
+            details_title="Details: ".red(),
+            pairs_short = PAIRS_SHORT.cyan(),
+            or="or".red(),
+            pairs_long=PAIRS_LONG.cyan(),
+            is="is".red(),
+            pairs=pairs.to_string().cyan(),
+            when_in_file="when in file".red(),
+            config_pairs = config.pairs.to_string().cyan(),
         );
         std::process::exit(1);
     }

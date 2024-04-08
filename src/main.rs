@@ -125,20 +125,6 @@ fn main() {
     }
 
     loop {
-        if verbose && poll(Duration::from_millis(sensitivity)).expect("poll error") {
-            match read().expect("read error") {
-                Event::Key(event) => {
-                    if event.code == KeyCode::Char('c')
-                        && event.modifiers.contains(KeyModifiers::CONTROL)
-                    {
-                        break;
-                    }
-                    // Handle other key events here
-                }
-                _ => {}
-            }
-        }
-
         let keys = device_state.get_keys();
 
         // Check for new key presses
@@ -155,6 +141,20 @@ fn main() {
         }
 
         last_keys = keys;
+
+        if verbose && poll(Duration::from_millis(sensitivity)).expect("poll error") {
+            match read().expect("read error") {
+                Event::Key(event) => {
+                    if event.code == KeyCode::Char('c')
+                        && event.modifiers.contains(KeyModifiers::CONTROL)
+                    {
+                        break;
+                    }
+                    // Handle other key events here
+                }
+                _ => {}
+            }
+        }
     }
 
     if verbose {

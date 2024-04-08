@@ -22,3 +22,25 @@
 Regular(Right, 200.721729ms)
 Regular(LControl, 402.289861ms)
 Regular(C, 310.641µs)
+Check
+First(Down)
+Regular(Up, 201.334094ms)
+Regular(Down, 77.659805ms)
+Regular(Up, 201.021088ms)
+Regular(Down, 10.076691ms)
+Regular(Right, 200.772893ms)
+Regular(Down, 83.250378ms)
+Regular(Up, 67.189689ms)
+Regular(Down, 96.744024ms)
+Regular(Up, 201.072674ms)
+Regular(Down, 34.087241ms)
+Regular(Up, 201.467264ms)
+Regular(Down, 6.259916ms)
+Regular(LControl, 401.908176ms)
+Check
+First(Down)
+Regular(Up, 200.922436ms)
+Regular(Down, 62.98014ms)
+Regular(Up, 200.842497ms)
+Regular(LControl, 201.725056ms)
+Regular(C, 496.64µs)

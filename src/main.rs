@@ -75,6 +75,7 @@ macro_rules! verbose {
 pub enum TraceStep {
     First(Keycode),
     Regular(Keycode, Duration),
+    Check,
 }
 
 #[derive(Debug)]
@@ -282,15 +283,15 @@ fn main() {
         key_counts = serde_yaml::from_str(&contents)
             .expect("data in output file {:?} not valid and cannot be deserialize");
 
-        println!(
-            "{}: file that you provide like output ({:?}) already exist",
-            "warning!".yellow(),
-            path
-        );
-        print!("would you like modify this file? [y/N] ");
-        io::stdout().flush().unwrap();
-
         if !force_modify_output {
+            println!(
+                "{}: file that you provide like output ({:?}) already exist",
+                "warning!".yellow(),
+                path
+            );
+            print!("would you like modify this file? [y/N] ");
+            io::stdout().flush().unwrap();
+
             let mut buffer = [0; 1];
             io::stdin()
                 .read_exact(&mut buffer)
@@ -306,6 +307,9 @@ fn main() {
 
     // save first time to check open/write errors
     save_data(&key_counts, statistic_path.as_ref().unwrap());
+    if let Some(ref trace_path) = trace_path {
+        upend_trace(TraceStep::Check, &trace_path);
+    }
 
     let device_state = DeviceState::new();
     let mut last_keys = Vec::new();
@@ -392,7 +396,7 @@ fn upend_trace(trace_step: TraceStep, path: &PathBuf) {
         .append(true)
         .open(path)
         .expect(format!("cannot create / open file {:?}", path).as_str());
-  
+
     writeln!(file, "\r{:?}", trace_step)
         .expect(format!("cannot write to file {:?}", path).as_str());
 }

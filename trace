@@ -651,3 +651,187 @@
 Regular([S], 446.02716ms)
 Regular([S, C], 56.179512ms)
 Regular([LControl], 629.62885ms)
+Init("2024-04-08T19:28:54.703908889+02:00")
+First([Down])
+Regular([Up], 494.78645ms)
+Regular([Up], 342.218565ms)
+Regular([Down], 218.434722ms)
+Regular([Up], 202.892587ms)
+Regular([Down], 186.593453ms)
+Regular([Right], 93.6264ms)
+Regular([Up, Right], 193.742005ms)
+Regular([Up, Down], 111.37608ms)
+Regular([Down], 339.202865ms)
+Regular([Up], 133.847625ms)
+Regular([Up, Down], 46.963166ms)
+Regular([J], 674.613586ms)
+Regular([K], 125.253857ms)
+Regular([J, K], 94.192039ms)
+Regular([F, J, K], 18.844431ms)
+Regular([F, K], 77.784713ms)
+Regular([D, F, K], 47.09873ms)
+Regular([S, D, F, K], 728.384µs)
+Regular([LControl], 262.469321ms)
+Regular([LControl, C], 210.796051ms)
+Init("2024-04-08T19:29:16.960413185+02:00")
+First([N])
+Regular([Up], 505.179234ms)
+Regular([Up, Down], 22.638999ms)
+Regular([Up], 427.162197ms)
+Regular([F], 327.681194ms)
+Regular([Down], 304.053412ms)
+Regular([D], 298.877957ms)
+Regular([Up], 174.460189ms)
+Regular([S], 253.416366ms)
+Regular([Up], 532.06173ms)
+Regular([Down], 381.964219ms)
+Regular([Up, Down], 571µs)
+Regular([Down], 490.405758ms)
+Regular([Up, Down], 530.453µs)
+Regular([Down], 328.333334ms)
+Regular([Up, Down], 655.167µs)
+Regular([Down], 678.453409ms)
+Regular([Down], 188.113496ms)
+Regular([Up], 157.905778ms)
+Regular([LControl, B], 522.12238ms)
+Regular([O, B], 44.765838ms)
+Regular([Down], 533.532775ms)
+Regular([Down], 220.724223ms)
+Regular([Down], 1.216354213s)
+Regular([Down], 184.769561ms)
+Regular([LControl, Right], 116.850811ms)
+Regular([LControl, Right], 256.572446ms)
+Regular([Right], 304.861964ms)
+Regular([Up], 326.857497ms)
+Regular([Right], 896.929146ms)
+Regular([Right], 189.075776ms)
+Regular([R], 275.41889ms)
+Regular([LControl, Right], 430.578031ms)
+Regular([R], 1.63837091s)
+Regular([Key8, LShift], 448.98447ms)
+Regular([W], 705.836247ms)
+Regular([H], 379.046458ms)
+Regular([V], 146.801004ms)
+Regular([E, V], 68.699341ms)
+Regular([L], 298.420155ms)
+Regular([L], 152.778973ms)
+Regular([X], 202.892507ms)
+Regular([H], 311.7847ms)
+Regular([X], 121.092566ms)
+Regular([B], 163.134451ms)
+Regular([I], 230.436064ms)
+Regular([LShift], 259.290415ms)
+Regular([Key8, LShift], 2.577979ms)
+Regular([Escape], 141.453557ms)
+Regular([J], 196.06092ms)
+Regular([W], 191.979285ms)
+Regular([L], 917.663688ms)
+Regular([J], 1.299905539s)
+Regular([K], 1.176312718s)
+Regular([K], 1.022998192s)
+Regular([K], 184.170025ms)
+Regular([K], 165.625115ms)
+Regular([J], 519.247535ms)
+Regular([K], 1.354008079s)
+Regular([K], 1.36536946s)
+Regular([J], 1.463392728s)
+Regular([J], 171.48439ms)
+Regular([J], 174.83672ms)
+Regular([J], 222.132356ms)
+Regular([J], 1.280903961s)
+Regular([J], 236.365898ms)
+Regular([K], 1.284300601s)
+Regular([K], 182.857805ms)
+Regular([B], 159.073762ms)
+Regular([B], 170.159578ms)
+Regular([H], 349.994229ms)
+Regular([V], 153.604085ms)
+Regular([E, V], 90.978584ms)
+Regular([L], 252.890983ms)
+Regular([L], 165.344728ms)
+Regular([X], 147.091125ms)
+Regular([H], 357.545715ms)
+Regular([X], 451.550908ms)
+Regular([H], 135.935938ms)
+Regular([I], 279.881843ms)
+Regular([Escape], 411.26376ms)
+Regular([H], 184.28638ms)
+Regular([H], 189.902791ms)
+Regular([A], 443.749993ms)
+Regular([LShift], 272.286434ms)
+Regular([Key8, LShift], 3.050074ms)
+Regular([Escape], 226.528879ms)
+Regular([Semicolon, LShift], 799.84564ms)
+Regular([W], 100.870473ms)
+Regular([Q, W], 94.888818ms)
+Regular([LControl, B], 734.826614ms)
+Regular([O, B], 46.034513ms)
+Regular([LControl], 573.31698ms)
+Regular([LControl, C], 66.193996ms)
+Init("2024-04-08T19:33:43.537764043+02:00")
+First([J])
+Regular([F, J], 76.861913ms)
+Regular([F, K], 42.148635ms)
+Regular([F, J], 76.307304ms)
+Regular([S, F, J], 71.595259ms)
+Regular([S, D, F, J], 31.687971ms)
+Regular([S, D, K], 2.519079ms)
+Regular([S, D, K, L], 41.835167ms)
+Regular([S, J], 70.251702ms)
+Regular([F, J], 46.481671ms)
+Regular([F, J, K], 51.805913ms)
+Regular([F, J], 67.463579ms)
+Regular([D, F, J], 54.671541ms)
+Regular([S, D, F, J], 576.429µs)
+Regular([S, D, F, J, K], 18.49958ms)
+Regular([LControl], 235.211693ms)
+Regular([LControl, C], 89.472293ms)
+Init("2024-04-08T19:33:54.284493425+02:00")
+First([J])
+Regular([F, J], 61.706406ms)
+Regular([F, K], 42.509099ms)
+Regular([F, K, L], 358.281µs)
+Regular([S, F, J], 78.366401ms)
+Regular([S, D, F, J], 46.852114ms)
+Regular([S, D, K], 28.848653ms)
+Regular([F], 72.240036ms)
+Regular([F, J], 423.223µs)
+Regular([D, F, J], 90.548637ms)
+Regular([D, F, K, L], 2.480676ms)
+Regular([F, J], 48.778122ms)
+Regular([D, F, J], 70.874758ms)
+Regular([S, D, F, J], 536.806µs)
+Regular([S, D, F, K], 2.49325ms)
+Regular([S, D, F, K, L], 316.011µs)
+Regular([LControl], 190.279073ms)
+Regular([LControl, C], 89.380911ms)
+Init("2024-04-08T19:34:06.134976326+02:00")
+First([Down])
+Regular([Up, Right], 136.333772ms)
+Regular([Down], 76.455771ms)
+Regular([F, Down], 50.310351ms)
+Regular([F, Up], 20.865611ms)
+Regular([F, Up, Right], 18.224063ms)
+Regular([F, Down], 50.970428ms)
+Regular([S, F], 95.438675ms)
+Regular([S, F, Up], 550.441µs)
+Regular([S, F, Up, Right], 919.272µs)
+Regular([S, D, F, Right, Down], 49.47715ms)
+Regular([LControl], 211.179628ms)
+Regular([LControl, C], 69.804623ms)
+Init("2024-04-08T19:34:10.503566294+02:00")
+First([Down])
+Regular([F, Down], 64.058471ms)
+Regular([F, Up], 47.318798ms)
+Regular([S, D, F, Up], 71.310203ms)
+Regular([S, D, F, Down], 19.279991ms)
+Regular([S, Up], 75.651274ms)
+Regular([F, Down], 72.00245ms)
+Regular([F, Up], 70.84962ms)
+Regular([S, F, Up], 30.545792ms)
+Regular([S, F, Down], 18.439317ms)
+Regular([S, D], 93.768727ms)
+Regular([S, D, Up], 641.803µs)
+Regular([S, D, Up, Right], 348.402µs)
+Regular([S, D, Up, Down], 51.091414ms)
+Regular([LControl], 137.382035ms)

@@ -63,11 +63,9 @@ const TRACE_LONG: &str = "--trace";
 const PAIRS_SHORT: &str = "-p";
 const PAIRS_LONG: &str = "--pairs";
 
-//const FORMAT_SHORT: &str = "-f";
-//const FORMAT_LONG: &str = "--format";
+const NO_CHORDS_LONG: &str = "--no-chords";
 
 const DEFAULT_STATISTIC_PATH_YAML: &str = "key-capture-statistic.yaml";
-//const DEFAULT_STATISTIC_PATH_JSON: &str = "key-capture-statistic.json";
 
 macro_rules! verbose {
     ($verbose:expr, $($arg:tt)*) => {
@@ -93,11 +91,12 @@ pub struct KeyCounts {
 #[derive(Debug, Clone, Copy, Default, Deserialize, Serialize)]
 pub struct Config {
     pub pairs: bool,
+    pub no_chords: bool,
 }
 
 impl Config {
-    pub fn new(pairs: bool) -> Self {
-        Self { pairs }
+    pub fn new(pairs: bool, no_chords: bool) -> Self {
+        Self { pairs, no_chords }
     }
 }
 
@@ -274,6 +273,7 @@ fn main() {
     let mut sensitivity = PRODUCTIVE_SENSITIVITY_VALUE;
     let mut force_modify_output = false;
     let mut verbose = false;
+    let mut no_chords = false;
     let mut statistic_path: Option<PathBuf> = None;
     let mut trace_path: Option<PathBuf> = None;
     let mut pairs = false;
@@ -325,6 +325,9 @@ fn main() {
                 let path = Path::new(&path);
                 trace_path = Some(path.to_path_buf());
             }
+            NO_CHORDS_LONG => {
+                no_chords = true;
+            }
             VERBOSE_SHORT | VERBOSE_LONG => verbose = true,
             HELP_SHORT | "-?" | "?" | "h" | HELP_LONG | "-help" | "help" => {
                 println!(
@@ -349,7 +352,11 @@ fn main() {
                     {default} {PRODUCTIVE_SENSITIVITY_VALUE}
 
     {pairs_short}, {pairs_long} 
-                   save buttons pairs counts instead single
+                    Save buttons pairs counts instead single
+
+    {no_chords_long}
+                    Get inputs separately not paying attention to simultaneous presses
+                    
 
     {modify_output_short}, {modify_output_long}         
                     Force modify output file if it already exists
@@ -397,6 +404,7 @@ fn main() {
                     trace_value = "<path>".cyan(),
                     pairs_short = PAIRS_SHORT.cyan(),
                     pairs_long = PAIRS_LONG.cyan(),
+                    no_chords_long = NO_CHORDS_LONG.cyan(),
                 );
 
                 std::process::exit(0);
@@ -452,9 +460,9 @@ fn main() {
     }
 
     if let Some(config) = key_counts.config {
-        check_config(config, pairs, statistic_path.as_ref().unwrap());
+        check_config(config, pairs, no_chords, statistic_path.as_ref().unwrap());
     } else {
-        key_counts.config = Some(Config::new(pairs));
+        key_counts.config = Some(Config::new(pairs, no_chords));
     }
 
     // save first time to check open/write errors
@@ -485,25 +493,87 @@ fn main() {
         for key in &keys {
             if !last_keys.contains(key) {
                 some = true;
+                if no_chords {
+                    if pairs {
+                        let input = Input::Single(*key);
+
+                        // skip first iteration becouse it is have not pair
+                        if last_pair.len() != 0 {
+                            let last_iput = Input::Single(last_pair[0]);
+
+                            let count_item = CountItem::Pair(last_iput, input);
+                            *key_counts.entry(count_item.clone()).or_insert(0) += 1;
+
+                            verbose!(
+                                verbose,
+                                "{:?} has been pressed {} times",
+                                *key,
+                                key_counts[&count_item]
+                            );
+
+                            // Is this expensive?)
+                            save_data(&key_counts, statistic_path.as_ref().unwrap());
+                        }
+
+                        last_pair = vec![*key];
+                    } else {
+                        let input = Input::Single(*key);
+
+                        let count_item = CountItem::Single(input);
+                        *key_counts.entry(count_item.clone()).or_insert(0) += 1;
+                        verbose!(
+                            verbose,
+                            "{:?} has been pressed {} times",
+                            *key,
+                            key_counts[&count_item]
+                        );
+
+                        // Is this expensive?)
+                        save_data(&key_counts, statistic_path.as_ref().unwrap());
+                    }
+                }
             }
         }
-        if some {
-            if pairs {
-                let input = if keys.len() == 1 {
-                    Input::Single(keys[0])
-                } else {
-                    Input::Chord(keys.clone())
-                };
 
-                // skip first iteration becouse it is have not pair
-                if last_pair.len() != 0 {
-                    let last_iput = if last_pair.len() == 1 {
-                        Input::Single(last_pair[0])
+        if some {
+            if !no_chords {
+                if pairs {
+                    let input = if keys.len() == 1 {
+                        Input::Single(keys[0])
                     } else {
-                        Input::Chord(last_pair.clone())
+                        Input::Chord(keys.clone())
                     };
 
-                    let count_item = CountItem::Pair(last_iput, input);
+                    // skip first iteration becouse it is have not pair
+                    if last_pair.len() != 0 {
+                        let last_iput = if last_pair.len() == 1 {
+                            Input::Single(last_pair[0])
+                        } else {
+                            Input::Chord(last_pair.clone())
+                        };
+
+                        let count_item = CountItem::Pair(last_iput, input);
+                        *key_counts.entry(count_item.clone()).or_insert(0) += 1;
+                        verbose!(
+                            verbose,
+                            "{:?} has been pressed {} times",
+                            keys.clone(),
+                            key_counts[&count_item]
+                        );
+
+                        // Is this expensive?)
+                        save_data(&key_counts, statistic_path.as_ref().unwrap());
+                    }
+
+                    last_pair = keys.clone();
+                } else {
+                    let input = if keys.len() == 1 {
+                        Input::Single(keys[0])
+                    } else {
+                        Input::Chord(keys.clone())
+                    };
+
+                    let count_item = CountItem::Single(input);
                     *key_counts.entry(count_item.clone()).or_insert(0) += 1;
                     verbose!(
                         verbose,
@@ -515,27 +585,8 @@ fn main() {
                     // Is this expensive?)
                     save_data(&key_counts, statistic_path.as_ref().unwrap());
                 }
-
-                last_pair = keys.clone();
-            } else {
-                let input = if keys.len() == 1 {
-                    Input::Single(keys[0])
-                } else {
-                    Input::Chord(keys.clone())
-                };
-
-                let count_item = CountItem::Single(input);
-                *key_counts.entry(count_item.clone()).or_insert(0) += 1;
-                verbose!(
-                    verbose,
-                    "{:?} has been pressed {} times",
-                    keys.clone(),
-                    key_counts[&count_item]
-                );
-
-                // Is this expensive?)
-                save_data(&key_counts, statistic_path.as_ref().unwrap());
             }
+
             if let Some(ref trace_path) = trace_path {
                 let duration = start.elapsed();
                 let step = if first_trace_step {
@@ -596,15 +647,15 @@ fn upend_trace(trace_step: TraceStep, path: &PathBuf) {
         .expect(format!("cannot write to file {:?}", path).as_str());
 }
 
-fn check_config(config: Config, pairs: bool, path: &PathBuf) {
+fn check_config(config: Config, pairs: bool, no_chords: bool, path: &PathBuf) {
     let error = format!(
         "Config in output file that you provide {:?} do not match to your options\nit is means different settings were used to create this file\n",
         path
     ).red();
     if config.pairs != pairs {
         println!(
-            "{error}{details_title}{pairs_short} {or} {pairs_long} {is} {pairs} {when_in_file} {config_pairs}",
-            details_title="Details: ".red(),
+            "{error}{details_title} {pairs_short} {or} {pairs_long} {is} {pairs} {when_in_file} {config_pairs}",
+            details_title="Details:".red(),
             pairs_short = PAIRS_SHORT.cyan(),
             or="or".red(),
             pairs_long=PAIRS_LONG.cyan(),
@@ -612,6 +663,19 @@ fn check_config(config: Config, pairs: bool, path: &PathBuf) {
             pairs=pairs.to_string().cyan(),
             when_in_file="when in file".red(),
             config_pairs = config.pairs.to_string().cyan(),
+        );
+        std::process::exit(1);
+    }
+
+    if config.no_chords != no_chords {
+        println!(
+            "{error}{details_title} {no_chords_long} {is} {no_chords} {when_in_file} {config_no_chords}",
+            details_title="Details:".red(),
+            no_chords_long = NO_CHORDS_LONG.cyan(),
+            is="is".red(),
+            no_chords=no_chords.to_string().cyan(),
+            when_in_file="when in file".red(),
+            config_no_chords = config.no_chords.to_string().cyan(),
         );
         std::process::exit(1);
     }

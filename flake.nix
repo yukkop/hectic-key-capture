@@ -30,12 +30,29 @@
         in
         with pkgs;
         {
+	  packages = {
+            default = rustPlatform.buildRustPackage {
+              inherit buildInputs nativeBuildInputs;
+              pname = "hectic-key-capture";
+              version = "0.1.0";
+              src = ./.;
+              cargoSha256 = "sha256-iMcVfwmUGSNJfQogAZZMI/7pRvgqLhVx7gvK7bAB5gY=";
+            };
+          };
+
+          apps = {
+            default = {
+              type = "app";
+              program = "${self.packages.${system}.default}/bin/hectic-key-capture";
+            };
+          };
+	  
           devShells.default = mkShell {
             inherit buildInputs nativeBuildInputs;
             shellHook = ''
               export PATH="''${PATH}:''${HOME}/.cargo/bin"
             '';
-            };
+          };
         }
       );
 
